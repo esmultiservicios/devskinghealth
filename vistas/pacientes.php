@@ -1,34 +1,34 @@
 <?php
-session_start(); 
-include "../php/funtions.php";
+session_start();
+include '../php/funtions.php';
 
-//CONEXION A DB
+// CONEXION A DB
 $mysqli = connect_mysqli();
 
-if( isset($_SESSION['colaborador_id']) == false ){
-   header('Location: login.php'); 
-}    
+if (isset($_SESSION['colaborador_id']) == false) {
+    header('Location: login.php');
+}
 
-$_SESSION['menu'] = "Pacientes";
+$_SESSION['menu'] = 'Pacientes';
 
-if(isset($_SESSION['colaborador_id'])){
- $colaborador_id = $_SESSION['colaborador_id'];  
-}else{
-   $colaborador_id = "";
+if (isset($_SESSION['colaborador_id'])) {
+    $colaborador_id = $_SESSION['colaborador_id'];
+} else {
+    $colaborador_id = '';
 }
 
 $type = $_SESSION['type'];
 
-$nombre_host = gethostbyaddr($_SERVER['REMOTE_ADDR']);//HOSTNAME	
-$fecha = date("Y-m-d H:i:s"); 
-$comentario = mb_convert_case("Ingreso al Modulo de Pacientes", MB_CASE_TITLE, "UTF-8");   
+$nombre_host = gethostbyaddr($_SERVER['REMOTE_ADDR']);  // HOSTNAME
+$fecha = date('Y-m-d H:i:s');
+$comentario = mb_convert_case('Ingreso al Modulo de Pacientes', MB_CASE_TITLE, 'UTF-8');
 
-if($colaborador_id != "" || $colaborador_id != null){
-   historial_acceso($comentario, $nombre_host, $colaborador_id);  
-}  
+if ($colaborador_id != '' || $colaborador_id != null) {
+    historial_acceso($comentario, $nombre_host, $colaborador_id);
+}
 
-$mysqli->close();//CERRAR CONEXIÓN     
- ?>
+$mysqli->close();  // CERRAR CONEXIÓN
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -40,14 +40,14 @@ $mysqli->close();//CERRAR CONEXIÓN
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pacientes :: <?php echo SERVEREMPRESA;?></title>
-    <?php include("script_css.php"); ?>
+    <title>Pacientes :: <?php echo SERVEREMPRESA; ?></title>
+    <?php include ('script_css.php'); ?>
 </head>
 
 <body>
     <!--Ventanas Modales-->
     <!-- Small modal -->
-    <?php include("templates/modals.php"); ?>
+    <?php include ('templates/modals.php'); ?>
 
     <!--INICIO MODAL-->
 
@@ -101,7 +101,7 @@ $mysqli->close();//CERRAR CONEXIÓN
                             </div>
                             <div class="col-md-4 mb-3" style="display: none;">
                                 <label for="fecha">Fecha <span class="priority">*<span /></label>
-                                <input type="date" required id="fecha" name="fecha" value="<?php echo date ("Y-m-d");?>"
+                                <input type="date" required id="fecha" name="fecha" value="<?php echo date('Y-m-d'); ?>"
                                     class="form-control" />
                             </div>
                             <div class="col-md-4 mb-3">
@@ -123,7 +123,7 @@ $mysqli->close();//CERRAR CONEXIÓN
                         <div class="form-row">
                             <div class="col-md-3 mb-3">
                                 <label>Fecha de Nacimiento <span class="priority">*<span /></label>
-                                <input type="date" id="fecha_nac" name="fecha_nac" value="<?php echo date ("Y-m-d");?>"
+                                <input type="date" id="fecha_nac" name="fecha_nac" value="<?php echo date('Y-m-d'); ?>"
                                     class="form-control" />
                             </div>
                             <div class="col-md-3 mb-3">
@@ -313,7 +313,7 @@ $mysqli->close();//CERRAR CONEXIÓN
                             <div class="col-md-4 mb-3">
                                 <label for="fecha_re_manual">Fecha</label>
                                 <input type="date" class="form-control" name="fecha_re_manual" id="fecha_re_manual"
-                                    value="<?php echo date ("Y-m-d");?>" maxlength="100" readonly />
+                                    value="<?php echo date('Y-m-d'); ?>" maxlength="100" readonly />
                             </div>
                         </div>
                         <div class="form-row">
@@ -408,11 +408,11 @@ $mysqli->close();//CERRAR CONEXIÓN
     </div>
 
 
-    <?php include("modals/modals.php");?>
+    <?php include ('modals/modals.php'); ?>
 
     <!--Fin Ventanas Modales-->
     <!--MENU-->
-    <?php include("templates/menu.php"); ?>
+    <?php include ('templates/menu.php'); ?>
     <!--FIN MENU-->
 
     <br><br><br>
@@ -438,65 +438,59 @@ $mysqli->close();//CERRAR CONEXIÓN
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group mx-sm-3 mb-1">
-                            <input type="text" placeholder="Buscar por: Expediente, Nombre, Apellido o Identidad"
-                                data-toggle="tooltip" data-placement="top"
-                                title="Buscar por: Expediente, Nombre, Apellido o Identidad" id="bs_regis" autofocus
-                                class="form-control" size="50" />
-                        </div>
-                        <div class="form-group mx-sm-3 mb-1">
-                            <button class="btn btn-primary ml-1" type="submit" id="nuevo-registro">
-                                <div class="sb-nav-link-icon" data-toggle="tooltip" data-placement="top"
-                                    title="Registrar Pacientes"></div><i class="fas fa-user-plus fa-lg"></i> Registrar
-                                Pacientes
-                            </button>
-                            <button class="btn btn-primary ml-1" type="submit" id="profesion">
-                                <div class="sb-nav-link-icon" data-toggle="tooltip" data-placement="top"
-                                    title="Registrar Profesión"></div><i class="fas fa-download fa-lg"></i> Registrar
-                                Profesión
-                            </button>
-                            <button class="btn btn-success ml-1" type="submit" id="reporte">
-                                <div class="sb-nav-link-icon" data-toggle="tooltip" data-placement="top"
-                                    title="Exportar"></div><i class="fas fa-download fa-lg"></i> Exportar Pacientes
-                            </button>
-                        </div>
                     </form>
                 </div>
             </div>
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <i class="fas fa-user mr-1"></i>
-                    Pacientes
+                    <i class="fab fa-sellsy mr-1"></i>
+                    Resultado
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="registros overflow-auto" id="agrega-registros"></div>
-                        </div>
+                    <div class="table-responsive">
+                        <form id="formPrincipal">
+                            <div class="col-md-12 mb-3">
+                                <table id="dataTablePacientesMain" class="table table-striped table-condensed table-hover" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Expediente</th>
+                                            <th>Identidad</th>
+                                            <th>Paciente</th>
+                                            <th>Genero</th>
+                                            <th>Teléfono 1</th>
+                                            <th>Teléfono 2</th>
+                                            <th>Correo</th>
+                                            <th>Dirección</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>  							
+                                </table>
+                            </div>
+                        </form>
                     </div>
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-center" id="pagination"></ul>
-                    </nav>
                 </div>
+                <div class="card-footer small text-muted">
+                </div>	
             </div>
         </div>
 
     </div>
-    <?php include("templates/factura.php"); ?>
-    <?php include("templates/footer.php"); ?>
+    <?php include ('templates/factura.php'); ?>
+    <?php include ('templates/footer.php'); ?>
     </div>
 
     <!-- add javascripts -->
-    <?php 
-		include "script.php"; 
-		
-		include "../js/main.php"; 
-		include "../js/myjava_pacientes.php"; 
-		include "../js/select.php"; 	
-		include "../js/functions.php"; 
-		include "../js/myjava_cambiar_pass.php"; 		
-	?>
+    <?php
+    include 'script.php';
+
+    include '../js/main.php';
+    include '../js/myjava_pacientes.php';
+    include '../js/select.php';
+    include '../js/functions.php';
+    include '../js/myjava_cambiar_pass.php';
+    ?>
 </body>
 
 </html>

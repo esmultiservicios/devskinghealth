@@ -16,7 +16,7 @@ $fecha = date('Y-m-d');
 $numero_hijos = 0;
 
 // $departamento_id = isset($_POST['departamento_id']) && $_POST['departamento_id'] !== '' ? $_POST['departamento_id'] : 0;
-$departamento_id = '';
+$departamento_id = isset($_POST['departamento_id']) && $_POST['departamento_id'] !== '' ? $_POST['departamento_id'] : 0;
 $municipio_id = isset($_POST['municipio_id']) && $_POST['municipio_id'] !== '' ? $_POST['municipio_id'] : 0;
 $pais_id = isset($_POST['pais_id']) && $_POST['pais_id'] !== '' ? $_POST['pais_id'] : 0;
 

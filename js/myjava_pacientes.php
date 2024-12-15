@@ -1,91 +1,19 @@
 <script>
 $(document).ready(function() {
     getSexo();
-    pagination(1);
+    listar_pacientes();
     getStatus();
     getDepartamentos();
     getPais();
     getResponsable();
-    getReferido();
-
-    $('#form_main #nuevo-registro').on('click', function() {
-        if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() == 5 ||
-            getUsuarioSistema() == 6) {
-            $('#formulario_pacientes #reg').show();
-            $('#formulario_pacientes #edi').hide();
-            cleanPacientes();
-            $('#formulario_pacientes #grupo_expediente').hide();
-            $('#formulario_pacientes')[0].reset();
-            $('#formulario_pacientes #pro').val('Registro');
-            $("#formulario_pacientes #fecha").attr('readonly', false);
-            $("#formulario_pacientes #identidad").attr('readonly', false);
-            $("#formulario_pacientes #pais_id").val(1);
-            $('#formulario_pacientes #validate').removeClass('bien_email');
-            $('#formulario_pacientes #validate').removeClass('error_email');
-            $("#formulario_pacientes #correo").css("border-color", "none");
-            $('#formulario_pacientes #validate').html('');
-            $('#formulario_pacientes').attr({
-                'data-form': 'save'
-            });
-            $('#formulario_pacientes').attr({
-                'action': '<?php echo SERVERURL; ?>php/pacientes/agregarPacientes.php'
-            });
-            $('#modal_pacientes').modal({
-                show: true,
-                keyboard: false,
-                backdrop: 'static'
-            });
-            return false;
-        } else {
-            swal({
-                title: "Acceso Denegado",
-                text: "No tiene permisos para ejecutar esta acción",
-                type: "error",
-                confirmButtonClass: 'btn-danger'
-            });
-        }
-    });
-
-    $('#form_main #profesion').on('click', function() {
-        if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() == 5 ||
-            getUsuarioSistema() == 6) {
-            $('#formulario_profesiones #reg').show();
-            $('#formulario_profesiones #edi').hide();
-            $('#formulario_profesiones')[0].reset();
-            $('#formulario_profesiones #proceso').val('Registro');
-            paginationPorfesionales(1);
-            $('#formulario_profesiones').attr({
-                'data-form': 'save'
-            });
-            $('#formulario_profesiones').attr({
-                'action': '<?php echo SERVERURL; ?>php/pacientes/agregar_profesional.php'
-            });
-            $('#modal_profesiones').modal({
-                show: true,
-                keyboard: false,
-                backdrop: 'static'
-            });
-            return false;
-        } else {
-            swal({
-                title: "Acceso Denegado",
-                text: "No tiene permisos para ejecutar esta acción",
-                type: "error",
-                confirmButtonClass: 'btn-danger'
-            });
-        }
-    });
-
-    $('#form_main #bs_regis').on('keyup', function() {
-        pagination(1);
-    });
+    getReferido();  
 
     $('#formulario_profesiones #profesionales_buscar').on('keyup', function() {
         paginationPorfesionales(1);
     });
 
     $('#form_main #estado').on('change', function() {
-        pagination(1);
+        listar_pacientes();
     });
 
     $('#formulario_agregar_expediente_manual #identidad_ususario_manual').on('keyup', function() {
@@ -149,24 +77,34 @@ $('#convertir_manual').on('click', function(
     }
 });
 
-$('#form_main #reporte').on('click', function(e) {
-    e.preventDefault();
-    reporteEXCEL()();
-});
-
-function reporteEXCEL() {
-    if (getUsuarioSistema() == 1) {
-        var estado = "";
-        var dato = $('#form_main #bs_regis').val();
-
-        if ($('#estado').val() == "") {
-            estado = 1;
-        } else {
-            estado = $('#estado').val();
-        }
-
-        var url = '<?php echo SERVERURL; ?>php/pacientes/reportePacientes.php?dato=' + dato + '&estado=' + estado;
-        window.open(url);
+function modalPacientes(){
+    if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() == 5 ||
+        getUsuarioSistema() == 6) {
+        $('#formulario_pacientes #reg').show();
+        $('#formulario_pacientes #edi').hide();
+        cleanPacientes();
+        $('#formulario_pacientes #grupo_expediente').hide();
+        $('#formulario_pacientes')[0].reset();
+        $('#formulario_pacientes #pro').val('Registro');
+        $("#formulario_pacientes #fecha").attr('readonly', false);
+        $("#formulario_pacientes #identidad").attr('readonly', false);
+        $("#formulario_pacientes #pais_id").val(1);
+        $('#formulario_pacientes #validate').removeClass('bien_email');
+        $('#formulario_pacientes #validate').removeClass('error_email');
+        $("#formulario_pacientes #correo").css("border-color", "none");
+        $('#formulario_pacientes #validate').html('');
+        $('#formulario_pacientes').attr({
+            'data-form': 'save'
+        });
+        $('#formulario_pacientes').attr({
+            'action': '<?php echo SERVERURL; ?>php/pacientes/agregarPacientes.php'
+        });
+        $('#modal_pacientes').modal({
+            show: true,
+            keyboard: false,
+            backdrop: 'static'
+        });
+        return false;
     } else {
         swal({
             title: "Acceso Denegado",
@@ -174,25 +112,37 @@ function reporteEXCEL() {
             type: "error",
             confirmButtonClass: 'btn-danger'
         });
-        return false;
-    }
+    }    
 }
 
-function asignarExpedienteaRegistro(pacientes_id) {
-    var url = '<?php echo SERVERURL; ?>php/pacientes/agregar_expediente.php';
-
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: 'pacientes_id=' + pacientes_id,
-        success: function(registro) {
-            swal.close();
-            showExpediente(pacientes_id);
-            pagination(1);
-            return false;
-        }
-    });
-    return false;
+function modalProfesion(){
+    if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() == 5 ||
+        getUsuarioSistema() == 6) {
+        $('#formulario_profesiones #reg').show();
+        $('#formulario_profesiones #edi').hide();
+        $('#formulario_profesiones')[0].reset();
+        $('#formulario_profesiones #proceso').val('Registro');
+        paginationPorfesionales(1);
+        $('#formulario_profesiones').attr({
+            'data-form': 'save'
+        });
+        $('#formulario_profesiones').attr({
+            'action': '<?php echo SERVERURL; ?>php/pacientes/agregar_profesional.php'
+        });
+        $('#modal_profesiones').modal({
+            show: true,
+            keyboard: false,
+            backdrop: 'static'
+        });
+        return false;
+    } else {
+        swal({
+            title: "Acceso Denegado",
+            text: "No tiene permisos para ejecutar esta acción",
+            type: "error",
+            confirmButtonClass: 'btn-danger'
+        });
+    }
 }
 
 function getStatus() {
@@ -478,7 +428,7 @@ function eliminarRegistro(pacientes_id) {
                     type: "success",
                     timer: 3000, //timeOut for auto-clos
                 });
-                pagination(1);
+                listar_pacientes();
                 return false;
             } else if (registro == 2) {
                 swal({
@@ -532,7 +482,7 @@ function convertirExpedientetoTemporal() {
                 $('#formulario_agregar_expediente_manual #temporal').hide();
                 $('#convertir_manual').hide();
                 $('#reg_manual').show();
-                pagination(1);
+                listar_pacientes();
                 return false;
             } else {
                 swal({
@@ -564,7 +514,7 @@ function registrarExpedienteManual() {
                     timer: 3000, //timeOut for auto-clos
                 });
                 $('#agregar_expediente_manual').modal('hide');
-                pagination(1);
+                listar_pacientes();
             } else if (registro == 2) {
                 swal({
                     title: "Error",
@@ -793,37 +743,6 @@ function paginationPorfesionales(partida) {
     return false;
 }
 
-function pagination(partida) {
-    var url = '<?php echo SERVERURL; ?>php/pacientes/paginar.php';
-    var estado = "";
-    var paciente = "";
-    var dato = $('#form_main #bs_regis').val();
-
-    if ($('#form_main #estado').val() == "" || $('#form_main #estado').val() == null) {
-        estado = 1;
-    } else {
-        estado = $('#form_main #estado').val();
-    }
-
-    if ($('#form_main #tipo').val() == "" || $('#form_main #tipo').val() == null) {
-        paciente = 1;
-    } else {
-        paciente = $('#form_main #tipo').val();
-    }
-
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: 'partida=' + partida + '&estado=' + estado + '&dato=' + dato + '&paciente=' + paciente,
-        success: function(data) {
-            var array = eval(data);
-            $('#agrega-registros').html(array[0]);
-            $('#pagination').html(array[1]);
-        }
-    });
-    return false;
-}
-
 function getSexo() {
     var url = '<?php echo SERVERURL; ?>php/pacientes/getSexo.php';
 
@@ -1017,15 +936,6 @@ $(document).ready(function() {
         $("#convertir_manual").hide();
         $("#reg_manual").show();
     });
-});
-
-$('#form_main #limpiar').on('click', function(e) {
-    e.preventDefault();
-    $('#form_main #bs_regis').val("");
-    $('#form_main #bs_regis').focus();
-    getSexo();
-    pagination(1);
-    getStatus();
 });
 
 function getResponsable() {
@@ -1308,4 +1218,161 @@ $('#formulario_pacientes #grupo_editar_rtn').on('click', function(e) {
     modal_agregar_expediente_manual($('#formulario_pacientes #pacientes_id').val(), $(
         '#formulario_pacientes #expediente').val());
 });
+
+var listar_pacientes = function(){
+    var estado = "";
+    var paciente = "";
+    var dato = $('#form_main #bs_regis').val();
+
+    if ($('#form_main #estado').val() == "" || $('#form_main #estado').val() == null) {
+        estado = 1;
+    } else {
+        estado = $('#form_main #estado').val();
+    }
+
+    if ($('#form_main #tipo').val() == "" || $('#form_main #tipo').val() == null) {
+        paciente = 1;
+    } else {
+        paciente = $('#form_main #tipo').val();
+    }
+
+	var table_pacientes = $("#dataTablePacientesMain").DataTable({
+		"destroy":true,	
+		"ajax":{
+			"method":"POST",
+			"url": "<?php echo SERVERURL; ?>php/pacientes/llenarDataTablePacientes.php",
+            "data": function(d) {
+                d.paciente = paciente;
+				d.estado = estado;
+            }		
+		},		
+		"columns":[
+			{"data": "expediente"},
+			{"data": "identidad"},
+			{"data": "paciente"},			
+			{"data": "genero"},
+			{"data": "telefono1"},
+			{"data": "telefono2"},			
+            {"data": "email"},
+            {"data": "localidad"},
+            {"data": "estado"},
+			{
+				"data": null,
+				"defaultContent": 
+					'<div class="btn-group">' +
+						'<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+							'<i class="fas fa-cog"></i>' +
+						'</button>' +
+						'<div class="dropdown-menu">' +
+							'<a class="dropdown-item editarPacientes" href="#"><i class="fas fa-user-edit fa-lg"></i> Editar</a>' +
+                            '<a class="dropdown-item eliminarPacientes" href="#"><i class="fas fa-trash fa-lg"></i> Eliminar</a>' +
+						'</div>' +
+					'</div>'
+			}
+		],		
+        "lengthMenu": lengthMenu20,
+		"stateSave": true,
+		"bDestroy": true,		
+		"language": idioma_español,//esta se encuenta en el archivo main.js
+		"dom": dom,			
+		"buttons":[		
+			{
+				text:      '<i class="fas fa-sync-alt fa-lg"></i> Actualizar',
+				titleAttr: 'Actualizar Pago',
+				className: 'btn btn-info',
+				action: 	function(){
+					listar_pacientes();
+				}
+			},		
+			{
+				text:      '<i class="fas fa-user-plus fa-lg"></i> Registrar Pacientes',
+				titleAttr: 'Registrar Pacientes',
+				className: 'btn btn-primary',
+				action: 	function(){
+					modalPacientes();
+				}
+			},	  
+			{
+				text:      '<i class="fas fa-user-plus fa-lg"></i> Registrar Profesion',
+				titleAttr: 'Registrar Profesion',
+				className: 'btn btn-primary',
+				action: 	function(){
+					modalProfesion();
+				}
+			},	                      			
+			{
+				extend:    'excelHtml5',
+				text:      '<i class="fas fa-file-excel fa-lg"></i> Excel',
+				titleAttr: 'Excel',
+				footer: true,
+				title: 'Reporte Pacientes',
+				className: 'btn btn-success',
+				exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6,7,8]
+                },				
+			},
+			{
+				extend: 'pdf',
+				orientation: 'landscape',
+				text: '<i class="fas fa-file-pdf fa-lg"></i> PDF',
+				titleAttr: 'PDF',
+				footer: true,
+				title: 'Reporte Pacientes',
+				className: 'btn btn-danger',
+				exportOptions: {
+					modifier: {
+						page: 'current' // Solo exporta las filas visibles en la página actual
+					},
+					columns: [0, 1, 2, 3, 4, 5, 6,7,8] // Define las columnas a exportar
+				},
+				customize: function(doc) {
+					// Asegúrate de que `imagen` contenga la cadena base64 de la imagen
+					doc.content.splice(1, 0, {
+						margin: [0, 0, 0, 12],
+						alignment: 'left',
+						image: imagen, // Usando la variable que ya tiene la imagen base64
+						width: 100, // Ajusta el tamaño si es necesario
+						height: 45 // Ajusta el tamaño si es necesario
+					});
+				}
+			},
+			{
+				extend: 'print',
+				text: '<i class="fas fa-print fa-lg"></i> Imprimir',  // Correcta colocación del icono
+				titleAttr: 'Imprimir',
+				footer: true,
+				title: 'Reporte Pacientes',
+				className: 'btn btn-secondary',
+				exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6,7,8]
+                },
+			}
+		],
+	});	 
+	table_pacientes.search('').draw();
+	$('#buscar').focus();
+	
+	editar_pacientes_dataTable("#dataTablePacientesMain tbody", table_pacientes);
+    eliminar_pacientes_datataTable("#dataTablePacientesMain tbody", table_pacientes);
+}
+
+var editar_pacientes_dataTable = function(tbody, table){
+	$(tbody).off("click", "a.editarPacientes");
+	$(tbody).on("click", "a.editarPacientes", function(e){
+		e.preventDefault();
+		var data = table.row( $(this).parents("tr") ).data();
+		
+		editarRegistro(data.pacientes_id);
+	});
+}
+
+var eliminar_pacientes_datataTable = function(tbody, table){
+	$(tbody).off("click", "a.eliminarPacientes");
+	$(tbody).on("click", "a.eliminarPacientes", function(e){
+		e.preventDefault();
+		var data = table.row( $(this).parents("tr") ).data();
+		
+		modal_eliminar(data.pacientes_id);
+	});
+}
 </script>
