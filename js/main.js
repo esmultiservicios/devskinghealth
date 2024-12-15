@@ -425,6 +425,11 @@ function llenarTabla(dato) {
 
 	if (dato == "Facturacion") {
 		pagination(1);
+		$('#formulario_facturacion')[0].reset();
+		getTotalFacturasDisponibles();
+		getPacientesFacturacion();
+		getColaboradoresFacturacion();
+		getServiciosFacturacion();
 		funciones();
 		limpiarTabla();
 		cleanFooterValueBill();
@@ -435,6 +440,11 @@ function llenarTabla(dato) {
 
 	if (dato == "GuardarFactura") {
 		pagination(1);
+		$('#formulario_facturacion')[0].reset();
+		getTotalFacturasDisponibles();
+		getPacientesFacturacion();
+		getColaboradoresFacturacion();
+		getServiciosFacturacion();
 		funciones();
 		limpiarTabla();
 		cleanFooterValueBill();
@@ -444,12 +454,18 @@ function llenarTabla(dato) {
 	}
 
 	if (dato == "FacturaAtenciones") {
-		getServicio();
-		listar_productos_facturas_buscar();
 		pagination(1);
+		$('#formulario_facturacion')[0].reset();
+		getTotalFacturasDisponibles();
+		getPacientesFacturacion();
+		getColaboradoresFacturacion();
+		getServiciosFacturacion();
+		funciones();
 		limpiarTabla();
-		//volver();
 		cleanFooterValueBill();
+		volver();
+		$('.footer').show();
+		$('.footer1').hide();
 	}
 
 	if (dato == "Usuarios") {
