@@ -17,7 +17,7 @@ $query = "SELECT u.id AS id, c.nombre AS nombre, c.apellido AS apellido, u.usern
        ON u.colaborador_id = c.colaborador_id 
        INNER JOIN empresa AS e
        ON c.empresa_id = e.empresa_id
-	   ORDER BY u.id ASC"));	
+	   ORDER BY u.id ASC";	
 }else{
 $query = "SELECT u.id AS id, c.nombre AS nombre, c.apellido AS apellido, u.username AS username, u.email AS email, e.nombre AS empresa, u.type AS tipo, u.estatus AS estatus
        FROM users AS u
@@ -26,7 +26,7 @@ $query = "SELECT u.id AS id, c.nombre AS nombre, c.apellido AS apellido, u.usern
        INNER JOIN empresa AS e
        ON c.empresa_id = e.empresa_id
 	   WHERE u.id LIKE '$dato%' OR CONCAT(c.nombre,' ',c.apellido) LIKE '$dato%' OR u.username LIKE '$dato%'
-	   ORDER BY u.id ASC"));	
+	   ORDER BY u.id ASC";	
 }
 
 $result = $mysqli->query($query);

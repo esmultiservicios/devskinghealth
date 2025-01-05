@@ -24,9 +24,4 @@ echo "
       <option value='22:00'>22:00</option>
 	  <option value='22:40'>22:40</option>
       <option value='23:20'>23:20</option>			
-?>
-
-
-               
-			   
-               
+";              

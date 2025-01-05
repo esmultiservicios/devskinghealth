@@ -24,10 +24,11 @@
         <form class="form-signin" id="loginform">
             <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> Iniciar Sesión</h1>
 
-            <p>
-                <center><img src="<?php echo SERVERURL; ?>img/logo_login.svg" width="100%">
-                </center>
-            </p>
+            <div style="text-align: center;">
+                <img src="<?php echo SERVERURL; ?>img/logo_login.svg" width="100%">
+            </div>
+
+            <br>
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -76,10 +77,12 @@
 
         <form class="form-reset" id="forgot_form">
             <h1 class="h3 mb-3 font-weight-normal" style="text-align: center">Restablecer Contraseña</h1>
-            <p>
-                <center><img src="<?php echo SERVERURL; ?>img/logo_login.svg" width="100%">
-                </center>
-            </p>
+
+            <div style="text-align: center;">
+                <img src="<?php echo SERVERURL; ?>img/logo_login.svg" width="100%">
+            </div>
+
+            <br>            
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -101,10 +104,12 @@
 
         <form class="form-signup" id="form_registro">
             <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> Formulario de Registro</h1>
-            <p>
-                <center><img src="<?php echo SERVERURL; ?>img/logo.png" style="max-width: 100%; max-height: 100%;">
-                </center>
-            </p>
+
+            <div style="text-align: center;">
+                <img src="<?php echo SERVERURL; ?>img/logo_login.svg" width="100%">
+            </div>
+
+            <br>            
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -164,10 +169,12 @@
         <!-- Copyright -->
         <div class="footer-copyright text-center py-3">
             © 2017 -  <?php echo date("Y");?> Copyright:
-            <center>
+
+            <div style="text-align: center;">
                 <p class="navbar-text"> Todos los derechos reservados
                 </p>
-            </center>
+            </div>
+
         </div>
         <!-- Copyright -->
 

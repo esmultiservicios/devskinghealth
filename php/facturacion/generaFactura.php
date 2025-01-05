@@ -1,19 +1,28 @@
 <?php
-session_start();   
-include "../funtions.php";
+session_start();
+include "../funtions.php";  // Incluye funciones y conexión
 
 header("Content-Type: text/html;charset=utf-8");
 
-include_once "../../dompdf/autoload.inc.php";
-require_once '../../pdf/vendor/autoload.php';
+require_once '../../dompdf/vendor/autoload.php';
 
 use Dompdf\Dompdf;
-	 	
+use Dompdf\Options;
+
 //CONEXION A DB
-$mysqli = connect_mysqli();
+$mysqli = connect_mysqli();  // Usas la conexión definida en funtions.php
+
+// Configurar Dompdf
+$options = new Options();
+$options->set('isHtml5ParserEnabled', true);
+$options->set('isRemoteEnabled', true);
+
+$dompdf = new Dompdf($options);
 
 $noFactura = $_GET['facturas_id'];
 $anulada = '';
+
+$mysqli->set_charset('utf8');
 
 $query = "SELECT CONCAT(p.nombre, ' ', p.apellido) AS 'paciente', p.identidad AS 'identidad', p.expediente AS 'expediente', p.telefono1 AS 'tel_paciente', p.localidad AS 'localidad_paciente', e.nombre AS 'empresa', e.ubicacion AS 'direccion_empresa', e.telefono AS 'empresa_telefono', e.correo AS 'empresa_correo', CONCAT(c.nombre, ' ', c.apellido) AS 'profesional', s.nombre AS 'servicio', sf.prefijo AS 'prefijo', sf.siguiente AS 'numero', sf.relleno AS 'relleno', DATE_FORMAT(f.fecha, '%d/%m/%Y') AS 'fecha', time(f.fecha_registro) AS 'hora', sf.cai AS 'cai', e.rtn AS 'rtn', sf.fecha_activacion AS 'fecha_activacion', sf.fecha_limite AS 'fecha_limite', pc.nombre AS 'puesto', f.estado AS 'estado', sf.rango_inicial AS 'rango_inicial', sf.rango_final AS 'rango_final', am.edad AS 'edad', f.number AS 'numero_factura', f.notas AS 'notas', e.otra_informacion As 'otra_informacion', e.eslogan AS 'eslogan', e.celular As 'celular'
 	FROM facturas AS f
@@ -42,7 +51,7 @@ ON fd.productos_id = p.productos_id
 WHERE facturas_id = '$noFactura'";
 $result_factura_detalle = $mysqli->query($query_factura_detalle) or die($mysqli->error);								
 
-if($result->num_rows>0){
+if($result->num_rows>0) {
 	$consulta_registro = $result->fetch_assoc();	
 	
 	$no_factura = str_pad($consulta_registro['numero_factura'], $consulta_registro['relleno'], "0", STR_PAD_LEFT);
@@ -51,26 +60,16 @@ if($result->num_rows>0){
 		$anulada = '<img class="anulada" src="'.SERVERURL.'img/anulado.png" alt="Anulada">';
 	}
 
+	// Incluir la plantilla HTML
 	ob_start();
-	include(dirname('__FILE__').'/factura.php');
+	include 'factura.php';
 	$html = ob_get_clean();
 
-	// instantiate and use the dompdf class
-	$dompdf = new Dompdf();
-	
-	$dompdf->set_option('isRemoteEnabled', true);
-
-	$dompdf->loadHtml(utf8_decode(utf8_encode($html)));
-	// (Optional) Setup the paper size and orientation
+	// Generar el PDF
+	$dompdf->loadHtml($html);
 	$dompdf->setPaper('letter', 'portrait');
-	// Render the HTML as PDF
 	$dompdf->render();
-	
-	file_put_contents(dirname('__FILE__').'/Facturas/factura_'.$no_factura.'.pdf', $dompdf->output());
-	
-	// Output the generated PDF to Browser
-	$dompdf->stream('factura_'.$no_factura.'.pdf',array('Attachment'=>0));
-	
-	exit;	
+
+	// Descargar o mostrar el PDF
+	$dompdf->stream("factura_$no_factura.pdf", ["Attachment" => false]);
 }
-?>

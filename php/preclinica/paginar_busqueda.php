@@ -31,7 +31,7 @@ $query = "SELECT p.expediente AS 'expediente', CONCAT(p.nombre,' ',p.apellido) A
 	INNER JOIN servicios AS s
 	ON ag.servicio_id = s.servicio_id
 	INNER JOIN puesto_colaboradores AS pc
-	"$where."
+	".$where."
 	ORDER BY ag.servicio_id, ag.hora";
 $result = $mysqli->query($query);
 $nroProductos = $result->num_rows;
@@ -71,7 +71,7 @@ $registro = "SELECT p.expediente AS 'expediente', CONCAT(p.nombre,' ',p.apellido
 	ON ag.servicio_id = s.servicio_id
 	INNER JOIN puesto_colaboradores AS pc
 	ON c.colaborador_id = pc.puesto_id		
-	"$where."
+	".$where."
 	ORDER BY ag.servicio_id, ag.hora ASC LIMIT $limit, $nroLotes";
 $result = $mysqli->query($registro);
 
@@ -122,4 +122,3 @@ echo json_encode($array);
 
 $result->free();//LIMPIAR RESULTADO
 $mysqli->close();//CERRAR CONEXIÓN	
-?>

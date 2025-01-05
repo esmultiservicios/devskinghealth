@@ -328,6 +328,12 @@ if($colaborador_id != "" || $colaborador_id != null){
                         </button>
                 </div>
                 <div class="form-group mr-1">
+                    <button class="btn btn-primary ml-1" type="submit" id="nueva_receta_medica">
+                        <div class="sb-nav-link-icon"></div><i class="fas fa-prescription-bottle-alt fa-lg"></i> Receta Medica
+                    </button>
+                </div>
+
+                <div class="form-group mr-1">
                     <button class="btn btn-primary ml-1" type="submit" id="nueva_factura">
                         <div class="sb-nav-link-icon"></div><i class="fas fa-file-invoice fa-lg"></i> Pre Factura
                     </button>
@@ -358,6 +364,58 @@ if($colaborador_id != "" || $colaborador_id != null){
                 <ul class="pagination justify-content-center" id="pagination"></ul>
             </nav>
         </div>
+
+        <div class="card recetaMedica" style="display:none;">
+            <div class="card-header text-white bg-info mb-3" style="text-align: center">
+                Receta Médica
+            </div>
+            <div class="card-body">
+                <div>
+                    <form id="form_receta" autocomplete="off">
+                        <input type="hidden" id="receta_pacientes_id" name="receta_pacientes_id" class="form-control" />
+                        <input type="hidden" id="receta_colaboradorId" name="receta_colaboradorId" class="form-control" />
+                        <input type="hidden" id="receta_servicioId" name="receta_servicioId" class="form-control" />
+                        <input type="hidden" id="receta_pacienteNombre" name="receta_pacienteNombre" class="form-control" />
+
+                        <div class="form-group">
+                            <span id="datos_paciente"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check-circle"></i> Registrar
+                            </button>
+                        </div>
+                                        
+                        <div class="form-group" id="grupo_paciente_receta">
+                            <select class="form-control selectpicker" id="receta_select_pacientes_id" name="receta_select_pacientes_id" data-size="7" data-live-search="true" title="Seleccione un paciente">
+                                <!-- Las opciones se llenarán dinámicamente con JavaScript -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <table class="table table-bordered" id="tablaReceta">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Descripción</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" id="agregarFila">
+                                <i class="fas fa-plus-circle"></i> Agregar Fila
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <?php include("templates/atencionMedicaHorizontal.php"); ?>
         <?php include("templates/factura.php"); ?>
         <?php include("templates/footer.php"); ?>

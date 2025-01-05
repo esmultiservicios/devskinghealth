@@ -6,7 +6,7 @@ $medidaTicket = 180;
 <html>
 
 <head>
-
+    <link rel="shortcut icon" href="<?php echo SERVERURL; ?>img/logo_icono.png">
     <style>
         * {
             font-size: 12px;
