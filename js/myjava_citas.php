@@ -31,7 +31,7 @@ $(document).ready(function() {
         slotLabelInterval: '00:20:00',
         minTime: "08:00:00",
         maxTime: "23:59:59",
-        slotDuration: "00:60:00",
+        slotDuration: "00:15:00",
         editable: true,
         eventLimit: true, // allow "more" link when too many events
         selectable: true,
