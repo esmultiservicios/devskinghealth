@@ -6,11 +6,13 @@
     <title>Receta</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            /*font-family: Arial, sans-serif;*/
+            font-family: 'Helvetica';
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-size: 14px; /* Tamaño de fuente base */
+            overflow: hidden; /* Evita contenido extra */
         }
         .container {
             width: 100%;
@@ -59,9 +61,8 @@
         .productos th, .productos td {
             border: 1px solid #000;
             padding: 8px;
-            text-align: left;
+            text-align: center;
             vertical-align: middle; /* Centrar el contenido verticalmente */
-            line-height: 0.5; /* Reducir la separación entre líneas */
         }
         .productos th {
             background-color: #f0f0f0;

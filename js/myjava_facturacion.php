@@ -274,8 +274,9 @@ function mailBill(facturas_id) {
 
 //INICIO IMPRIMIR FACTURACION
 function printBill(facturas_id) {
-    var url = '<?php echo SERVERURL; ?>php/facturacion/generaFactura.php?facturas_id=' + facturas_id;
-    window.open(url);
+    var type = 'Factura_media'; 
+    var url = '<?php echo SERVERURLWINDOWS; ?>?id=' + facturas_id + '&type=' + type;
+    window.open(url, '_blank');    
 }
 //FIN IMPRIMIR FACTURACION
 

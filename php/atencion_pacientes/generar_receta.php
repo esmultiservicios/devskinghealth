@@ -15,6 +15,8 @@ $db_main = DB_MAIN;
 
 // Configurar Dompdf
 $options = new Options();
+$options->set('margin-bottom', 0);
+$options->set('margin-left', 0);
 $options->set('isHtml5ParserEnabled', true);
 $options->set('isRemoteEnabled', true);
 
@@ -75,7 +77,21 @@ $html = ob_get_clean();
 
 // Generar el PDF
 $dompdf->loadHtml($html);
-$dompdf->setPaper('letter', 'portrait');
+//$dompdf->setPaper(array(0, 0, 612, 396), 'portrait'); // Media Carta: Ancho igual, alto dividido entre 2
+//$dompdf->setPaper(array(0, 0, 612, 396), 'portrait'); // Media Carta
+$dompdf->setPaper(array(0, 0, 612, 396), 'portrait'); // Tamaño carta en orientación vertical
+
+/*
+Explicación:
+1. array(0, 0, 612, 792):
+   El primer par (0, 0) indica el punto de inicio (esquina superior izquierda).
+   612 es el ancho (8.5 pulgadas).
+   792 es el alto (11 pulgadas).
+2. 'portrait':
+Define la orientación vertical.
+
+*/
+
 $dompdf->render();
 
 // Descargar o mostrar el PDF

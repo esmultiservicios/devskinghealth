@@ -21,9 +21,12 @@ $basePath = $serverName == 'localhost' ? '/devskinghealth/' : '/';
 
 // Construir la URL base
 $baseURL = $protocol . $serverName . $port . $basePath;
+$urlWindows = 'https://wi.fastsolutionhn.com/Rpt/esmultiservicio.aspx';
 
 // Definir la constante SERVERURL
 define('SERVERURL', $baseURL);
+define('SERVERURLWINDOWS', $urlWindows);
+
 
 // Otras constantes
 define('SERVEREMPRESA', 'CAMI');

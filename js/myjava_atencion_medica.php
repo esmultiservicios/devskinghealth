@@ -2358,9 +2358,9 @@ function getPacientes() {
     return false;
 }
 
-function getRecetaReporte(receta_id){
-    const url = `${"<?php echo SERVERURL; ?>php/atencion_pacientes/generar_receta.php"}?receta_id=${receta_id}`;
-    window.open(url);
+function getRecetaReporte(receta_id) {
+    var type = 'Receta'; 
+    var url = '<?php echo SERVERURLWINDOWS; ?>?id=' + receta_id + '&type=' + type;
+    window.open(url, '_blank');
 }
-
 </script>

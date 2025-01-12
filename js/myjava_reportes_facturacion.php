@@ -389,9 +389,10 @@ function convertDate(inputFormat) {
   return [d.getFullYear(), pad(d.getMonth()+1), pad(d.getDate())].join('-');
 }
 
-function printBill(facturas_id){
-	var url = '<?php echo SERVERURL; ?>php/facturacion/generaFactura.php?facturas_id='+facturas_id;
-    window.open(url);
+function printBill(facturas_id) {
+    var type = 'Factura_media'; 
+    var url = '<?php echo SERVERURLWINDOWS; ?>?id=' + facturas_id + '&type=' + type;
+    window.open(url, '_blank');    
 }
 /******************************************************************************************************************************************************************************/
 function getEstado(){
