@@ -4,7 +4,7 @@ include "../funtions.php";
 $servername = SERVER_MAIN;
 $username = USER_MAIN;
 $password = PASS_MAIN;
-$dbname = DB_MAIN;
+$dbname = DBIZZY;
 
 // Crear conexión
 $conn = new mysqli($servername, $username, $password, $dbname);

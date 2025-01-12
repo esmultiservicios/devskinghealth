@@ -27,11 +27,11 @@ $urlWindows = 'https://wi.fastsolutionhn.com/Rpt/esmultiservicio.aspx';
 define('SERVERURL', $baseURL);
 define('SERVERURLWINDOWS', $urlWindows);
 
-
 // Otras constantes
 define('SERVEREMPRESA', 'CAMI');
 define('SERVER', 'localhost');
 define('DB', 'clinicarehn_skincenter_cami');
+define('DBIZZY', 'clinicarehn_skincenter_izzy');
 define('USER', 'clinicarehn_clinicare');
 define('PASS', 'Clin1c@r32022#');
 
