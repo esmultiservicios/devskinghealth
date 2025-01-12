@@ -54,7 +54,7 @@ $result = $mysqli->query($registro);
 $tabla = $tabla.'<table class="table table-striped table-condensed table-hover">
 					<tr>
 					  <th width="23.33%">Código</th>
-					  <th width="53.33%">Puesto</th>					  
+					  <th width="53.33%">Especialidades</th>					  
 					  <th width="23.33%">Opciones</th>
 					</tr>';
 					

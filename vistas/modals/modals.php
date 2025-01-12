@@ -694,7 +694,7 @@
                                     <th>Seleecionar</th>
                                     <th>Colaborador</th>
                                     <th>Identidad</th>
-                                    <th>Puesto</th>
+                                    <th>Especialidades</th>
                                 </tr>
                             </thead>
                         </table>
