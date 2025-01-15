@@ -17,7 +17,7 @@ $pdf->SetMargins(6, 0.3 , 65);
 #Establecemos el margen inferior: 
 $pdf->SetAutoPageBreak(true,0.5);
 $pdf->AddPage();
-$pdf->Image('../../img/logo.png' , 11,2, 45 , 10,'PNG'); //float x , float y , float w , float h
+$pdf->Image(SERVERURLLOGO , 11,2, 45 , 10,'PNG'); //float x , float y , float w , float h
 
 $pdf->Ln(12);
 
