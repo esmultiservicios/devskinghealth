@@ -19,15 +19,17 @@ $port = ($_SERVER['SERVER_PORT'] != '80' && $_SERVER['SERVER_PORT'] != '443') ? 
 // Obtener la ruta base
 $basePath = $serverName == 'localhost' ? '/devskinghealth/' : '/';
 
+$urlLogo = "https://wi.fastsolutionhn.com/files/skinghealt_logo.png";
+define('SERVERURLLOGO', $urlLogo);
+
 // Construir la URL base
 $baseURL = $protocol . $serverName . $port . $basePath;
-$urlWindows = 'https://wi.fastsolutionhn.com/Rpt/esmultiservicio.aspx';
-$urlLogo = "https://wi.fastsolutionhn.com/files/skinghealt_logo.png";
 
 // Definir la constante SERVERURL
 define('SERVERURL', $baseURL);
+
+$urlWindows = 'https://wi.fastsolutionhn.com/Rpt/esmultiservicio.aspx';
 define('SERVERURLWINDOWS', $urlWindows);
-define('SERVERURLLOGO', $urlLogo);
 
 // Otras constantes
 define('SERVEREMPRESA', 'CAMI');
