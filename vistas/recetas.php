@@ -21,7 +21,7 @@ $type = $_SESSION['type'];
 
 $nombre_host = gethostbyaddr($_SERVER['REMOTE_ADDR']);  // HOSTNAME
 $fecha = date('Y-m-d H:i:s');
-$comentario = mb_convert_case('Ingreso al Modulo de Reporte de Facturación', MB_CASE_TITLE, 'UTF-8');
+$comentario = mb_convert_case('Ingreso al Modulo de Reporte de Recetas', MB_CASE_TITLE, 'UTF-8');
 
 if ($colaborador_id != '' || $colaborador_id != null) {
   historial_acceso($comentario, $nombre_host, $colaborador_id);
@@ -146,7 +146,7 @@ $mysqli->close();  // CERRAR CONEXIÓN
 <div class="container-fluid">
 	<ol class="breadcrumb mt-2 mb-4">
 		<li class="breadcrumb-item"><a class="breadcrumb-link" href="inicio.php">Dashboard</a></li>
-		<li class="breadcrumb-item active" id="acciones_factura"><span id="label_acciones_factura"></span>Reporte de Facturación</li>
+		<li class="breadcrumb-item active" id="acciones_factura"><span id="label_acciones_factura"></span>Recetas</li>
 	</ol>
 
   <div class="card mb-4">
@@ -155,7 +155,7 @@ $mysqli->close();  // CERRAR CONEXIÓN
       Búsqueda
     </div>
     <div class="card-body">
-      <form id="form_main_facturacion_reportes" class="form-inline">
+      <form id="form_main_receta_main" class="form-inline">
         <div class="form-group mr-1">
           <div class="input-group">
             <div class="input-group-append">
@@ -189,20 +189,20 @@ $mysqli->close();  // CERRAR CONEXIÓN
               <span class="input-group-text"><div class="sb-nav-link-icon"></div>Fecha Inicio</span>
             </div>
             <input type="date" required="required" id="fecha_b" name="fecha_b" style="width:160px;" data-toggle="tooltip" data-placement="top" title="Fecha Inicial" value="<?php
-$fecha = date('Y-m-d');
+              $fecha = date('Y-m-d');
 
-$año = date('Y', strtotime($fecha));
-$mes = date('m', strtotime($fecha));
-$dia = date('d', mktime(0, 0, 0, $mes + 1, 0, $año));
+              $año = date('Y', strtotime($fecha));
+              $mes = date('m', strtotime($fecha));
+              $dia = date('d', mktime(0, 0, 0, $mes + 1, 0, $año));
 
-$dia1 = date('d', mktime(0, 0, 0, $mes, 1, $año));  // PRIMER DIA DEL MES
-$dia2 = date('d', mktime(0, 0, 0, $mes, $dia, $año));  // ULTIMO DIA DEL MES
+              $dia1 = date('d', mktime(0, 0, 0, $mes, 1, $año));  // PRIMER DIA DEL MES
+              $dia2 = date('d', mktime(0, 0, 0, $mes, $dia, $año));  // ULTIMO DIA DEL MES
 
-$fecha_inicial = date('Y-m-d', strtotime($año . '-' . $mes . '-' . $dia1));
-$fecha_final = date('Y-m-d', strtotime($año . '-' . $mes . '-' . $dia2));
+              $fecha_inicial = date('Y-m-d', strtotime($año . '-' . $mes . '-' . $dia1));
+              $fecha_final = date('Y-m-d', strtotime($año . '-' . $mes . '-' . $dia2));
 
-echo $fecha_inicial;
-?>" class="form-control"/>
+              echo $fecha_inicial;
+              ?>" class="form-control"/>
           </div>
         </div>
         <div class="form-group mr-1">
@@ -223,67 +223,33 @@ echo $fecha_inicial;
   <div class="card mb-4">
     <div class="card-header">
         <i class="fab fa-sellsy mr-1"></i>
-        Reporte de Facturación
+        Recetas
     </div>
     <div class="card-body">
         <div class="table-responsive">
             <form id="formPrincipal">
                 <div class="col-md-12 mb-3">
-                    <table id="dataTableReporteFacturacionMain" class="table table-striped table-condensed table-hover" style="width:100%">
+                    <table id="dataTableRecetasMain" class="table table-striped table-condensed table-hover" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Fecha</th>
-                                <th>Factura</th>
+                                <th>Receta No.</th>
+                                <th>Fecha</th>                                
                                 <th>Identidad</th>
                                 <th>Cliente</th>
                                 <th>Número</th>
-                                <th>Importe</th>
-                                <th>ISV</th>
-                                <th>Descuento</th>
-                                <th>Neto</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Indicaciones</th>
                                 <th>Servicio</th>
-                                <th>Profesional</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th colspan="4"></th>
-                                <th colspan="1">Total:</th>
-                                <th id="footer-importe"></th>
-                                <th id="footer-isv"></th>
-                                <th id="footer-descuento"></th>
-                                <th id="footer-neto"></th>
-                                <th colspan="3"></th>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
             </form>
         </div>
     </div>
     <div class="card-footer small text-muted">
-    </div>
-  </div>
-  
-
-  <div class="card mb-4">
-    <div class="card-header">
-      <i class="fab fa-sellsy mr-1"></i>
-      Resultado
-    </div>
-    <div class="card-body">
-      <div class="form-group">
-    	  <div class="col-sm-12">
-    		    <div class="registros overflow-auto" id="agrega-registros"></div>
-    	   </div>
-  	  </div>
-    	<nav aria-label="Page navigation example">
-    		<ul class="pagination justify-content-center" id="pagination"></ul>
-    	</nav>
-    </div>
-    <div class="card-footer small text-muted">
-
     </div>
   </div>
 
@@ -295,7 +261,7 @@ echo $fecha_inicial;
   include 'script.php';
 
   include '../js/main.php';
-  include '../js/myjava_reportes_facturacion.php';
+  include '../js/myjava_recetas.php';
   include '../js/select.php';
   include '../js/functions.php';
   include '../js/myjava_cambiar_pass.php';

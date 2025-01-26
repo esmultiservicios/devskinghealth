@@ -11,8 +11,8 @@ function reportePDF(agenda_id) {
         swal({
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
-            type: "error",
-            confirmButtonClass: 'btn-danger'
+            icon: "error",
+            dangerMode: true
         });
         return false;
     }
@@ -253,7 +253,7 @@ var editar_productos_busqueda_dataTable = function(tbody, table) {
             swal({
                 title: "Error",
                 text: "Lo sentimos no se puede seleccionar un producto, por favor seleccione un cliente antes de poder continuar",
-                type: "error",
+                icon: "error",
                 confirmButtonClass: "btn-danger"
             });
         }
@@ -413,7 +413,7 @@ $("#formulario_facturacion #invoiceItem").on('click', '.producto', function() {
             swal({
                 title: "Error",
                 text: "Lo sentimos no se puede efectuar la búsqueda, por favor seleccione un cliente antes de poder continuar",
-                type: "error",
+                icon: "error",
                 confirmButtonClass: "btn-danger"
             });
         }
@@ -546,7 +546,7 @@ $("#formulario_facturacion #invoiceItem").on('click', '.producto', function() {
             swal({
                 title: "Error",
                 text: "Lo sentimos no se puede efectuar la búsqueda, por favor seleccione un cliente antes de poder continuar",
-                type: "error",
+                icon: "error",
                 confirmButtonClass: "btn-danger"
             });
         }
@@ -854,5 +854,50 @@ function getGithubVersion() {
             $('#version').text('Error al obtener la versión.');
         }
     });
+}
+
+function printBill(facturas_id) {
+    // Asignar un valor vacío si SERVERURLWINDOWS no está definido
+    var url = "<?php echo defined('SERVERURLWINDOWS') ? SERVERURLWINDOWS : ''; ?>";
+
+    // Verificar si la URL está vacía o no definida
+    if (!url || url.trim() === "") {
+        swal({
+            title: "Error",
+            text: "La URL de destino no está definida.",
+            icon: "error",
+            button: "Cerrar",
+        });
+        return;  // Salir de la función si la URL no está definida
+    }
+
+    // Crear un formulario dinámico
+    var form = document.createElement("form");
+    form.method = "POST";
+    form.action = url;
+
+    // Añadir los parámetros al formulario
+    var params = {
+        "id": facturas_id,
+        "type": "Factura_media",
+        "db": "<?php echo DB; ?>"
+    };
+
+    for (var key in params) {
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = params[key];
+        form.appendChild(input);
+    }
+
+    // Abrir una nueva ventana
+    var newWindow = window.open("", "_blank");
+
+    // Asegurarse de que la nueva ventana esté lista
+    newWindow.document.body.appendChild(form);
+    
+    // Enviar el formulario a la nueva ventana
+    form.submit();	
 }
 </script>

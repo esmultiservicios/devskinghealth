@@ -19,7 +19,7 @@ $pdf->SetAutoPageBreak(true,0.5);
 $pdf->AddPage();
 $pdf->Image(SERVERURLLOGO , 11,2, 45 , 10,'PNG'); //float x , float y , float w , float h
 
-$pdf->Ln(12);
+$pdf->Ln(15);
 
 //CONSULTA
 $agenda_id = $_GET['agenda_id'];

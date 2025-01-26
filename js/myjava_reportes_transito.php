@@ -135,8 +135,8 @@ function reporteEXCEL(){
 	swal({
 		title: "Acceso Denegado", 
 		text: "No tiene permisos para ejecutar esta acción",
-		type: "error", 
-		confirmButtonClass: 'btn-danger'
+		icon: "error", 
+		dangerMode: true
 	});	  
   }
 }
@@ -144,59 +144,73 @@ function reporteEXCEL(){
 function modal_eliminarTransitoRecibida(transito_id, expediente){
    if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() == 3 || getUsuarioSistema() == 5){	
 		swal({
-		  title: "¿Esta seguro?",
-		  text: "¿Desea eliminar el Transito Recibida para el usuario:  " + consultarNombre(expediente) + "?",
-		  type: "input",
-		  showCancelButton: true,
-		  closeOnConfirm: false,
-		  inputPlaceholder: "Comentario",
-		  cancelButtonText: "Cancelar",	
-		  confirmButtonText: "¡Sí, eliminar el Transito Recibido!",
-		  confirmButtonClass: "btn-warning"
-		}, function (inputValue) {
-		  if (inputValue === false) return false;
-		  if (inputValue === "") {
-			swal.showInputError("¡Necesita escribir algo!");
-			return false
-		  }
-			eliminarTransitoRecibida(transito_id, inputValue);
-		});	
+			title: "¿Esta seguro?",
+			text: "¿Desea eliminar el Transito Recibida para el usuario:  " + consultarNombre(expediente) + "?",
+			content: {
+				element: "input",
+				attributes: {
+				placeholder: "Comentario",
+				type: "text",
+				},
+			},
+			icon: "warning",
+			buttons: {
+				cancel: "Cancelar",
+				confirm: {
+				text: "¡Sí, remover el transito recibido!",
+				closeModal: false,
+				},
+			},
+		}).then((value) => {
+			if (value === null || value.trim() === "") {
+				swal("¡Necesita escribir algo!", { icon: "error" });
+				return false;
+			}
+			eliminarTransitoRecibida(transito_id, value);
+		});
    }else{
 		swal({
 			title: "Acceso Denegado", 
 			text: "No tiene permisos para ejecutar esta acción",
-			type: "error", 
-			confirmButtonClass: 'btn-danger'
+			icon: "error", 
+			dangerMode: true
 		});					 
 	}	
 }
 
 function modal_eliminarTransitoEnviada(transito_id, expediente){
    if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() == 3 || getUsuarioSistema() == 5){
-		swal({
-		  title: "¿Esta seguro?",
-		  text: "¿Desea eliminar el Transito Enviada para el usuario:  " + consultarNombre(expediente) + "?",
-		  type: "input",
-		  showCancelButton: true,
-		  closeOnConfirm: false,
-		  inputPlaceholder: "Comentario",
-		  cancelButtonText: "Cancelar",	
-		  confirmButtonText: "¡Sí, eliminar el Transito Enviada!",
-		  confirmButtonClass: "btn-warning"
-		}, function (inputValue) {
-		  if (inputValue === false) return false;
-		  if (inputValue === "") {
-			swal.showInputError("¡Necesita escribir algo!");
-			return false
-		  }
-			eliminarTransitoEnviada(transito_id, inputValue);
-		});	   
+	swal({
+			title: "¿Esta seguro?",
+			text: "¿Desea eliminar el Transito Enviada para el usuario:  " + consultarNombre(expediente) + "?",
+			content: {
+				element: "input",
+				attributes: {
+				placeholder: "Comentario",
+				type: "text",
+				},
+			},
+			icon: "warning",
+			buttons: {
+				cancel: "Cancelar",
+				confirm: {
+				text: "¡Sí, remover el transito enviado!",
+				closeModal: false,
+				},
+			},
+		}).then((value) => {
+			if (value === null || value.trim() === "") {
+				swal("¡Necesita escribir algo!", { icon: "error" });
+				return false;
+			}
+			eliminarTransitoEnviada(transito_id, value);
+		});  
    }else{
 		swal({
 			title: "Acceso Denegado", 
 			text: "No tiene permisos para ejecutar esta acción",
 			type: "error", 
-			confirmButtonClass: 'btn-danger'
+			dangerMode: true
 		});				 
 	}	
 }
@@ -223,8 +237,8 @@ function eliminarTransitoRecibida(id, comentario){
 		swal({
 			title: "Error", 
 			text: "No se puede agregar/modificar registros fuera de este periodo",
-			type: "error", 
-			confirmButtonClass: 'btn-danger'
+			icon: "error", 
+			dangerMode: true
 		});		 
 	 return false;	
   }else{	
@@ -238,7 +252,7 @@ function eliminarTransitoRecibida(id, comentario){
 			swal({
 				title: "Success", 
 				text: "Registro eliminado correctamente",
-				type: "success",
+				icon: "success",
 				timer: 3000, //timeOut for auto-close
 			});			 
 			pagination_transito(1);
@@ -246,8 +260,8 @@ function eliminarTransitoRecibida(id, comentario){
 			swal({
 				title: "Error", 
 				text: "Error al Eliminar el Registro",
-				type: "error", 
-				confirmButtonClass: 'btn-danger'
+				icon: "error", 
+				dangerMode: true
 			});				 
 		 }		 
 		 return false;
@@ -257,8 +271,8 @@ function eliminarTransitoRecibida(id, comentario){
 		swal({
 			title: "Error", 
 			text: "No se puede agregar/modificar registros fuera de esta fecha",
-			type: "error", 
-			confirmButtonClass: 'btn-danger'
+			icon: "error", 
+			dangerMode: true
 		});		   
 	   return false;		
 	}
@@ -267,8 +281,8 @@ function eliminarTransitoRecibida(id, comentario){
 	swal({
 		title: "Acceso Denegado", 
 		text: "No tiene permisos para ejecutar esta acción",
-		type: "error", 
-		confirmButtonClass: 'btn-danger'
+		icon: "error", 
+		dangerMode: true
 	});	 	
   }
 }
@@ -280,56 +294,56 @@ function eliminarTransitoEnviada(id, comentario){
 	
     var hoy = new Date();
     fecha_actual = convertDate(hoy);
-  if(getMes(fecha)==2){
-	swal({
-		title: "Error", 
-		text: "No se puede agregar/modificar registros fuera de este periodo",
-		type: "error", 
-		confirmButtonClass: 'btn-danger'
-	});		 
-	 return false;	
-  }else{	
-   if ( fecha <= fecha_actual){  
-	$.ajax({
-      type:'POST',
-	  url:url,
-	  data:'id='+id+'&comentario='+comentario,
-	  success: function(registro){
-		 if(registro == 1){
-			swal({
-				title: "Success", 
-				text: "Registro eliminado correctamente",
-				type: "success",
-				timer: 3000, //timeOut for auto-close
-			});
-			pagination_transito(1);
-		 }else{
-			swal({
-				title: "Error", 
-				text: "Error al Eliminar el Registro",
-				type: "error", 
-				confirmButtonClass: 'btn-danger'
-			});				 
-		 }		 
-		 return false;
-  	  }
-	});
-	}else{
+	if(getMes(fecha)==2){
 		swal({
 			title: "Error", 
 			text: "No se puede agregar/modificar registros fuera de este periodo",
-			type: "error", 
-			confirmButtonClass: 'btn-danger'
-		});			
-		return false;		
-	}
+			icon: "error", 
+			dangerMode: true
+		});		 
+		return false;	
+	}else{	
+	if ( fecha <= fecha_actual){  
+		$.ajax({
+		type:'POST',
+		url:url,
+		data:'id='+id+'&comentario='+comentario,
+		success: function(registro){
+			if(registro == 1){
+				swal({
+					title: "Success", 
+					text: "Registro eliminado correctamente",
+					icon: "success",
+					timer: 3000, //timeOut for auto-close
+				});
+				pagination_transito(1);
+			}else{
+				swal({
+					title: "Error", 
+					text: "Error al Eliminar el Registro",
+					icon: "error", 
+					dangerMode: true
+				});				 
+			}		 
+				return false;
+			}
+		});
+		}else{
+			swal({
+				title: "Error", 
+				text: "No se puede agregar/modificar registros fuera de este periodo",
+				icon: "error", 
+				dangerMode: true
+			});			
+			return false;		
+		}
    }
   }else{
 	swal({
 		title: "Acceso Denegado", 
 		text: "No tiene permisos para ejecutar esta acción",
-		type: "error", 
-		confirmButtonClass: 'btn-danger'
+		icon: "error", 
+		dangerMode: true
 	});	 
   }
 }

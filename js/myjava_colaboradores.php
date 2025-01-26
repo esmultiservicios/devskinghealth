@@ -43,8 +43,8 @@ $(function() {
             swal({
                 title: "Acceso Denegado",
                 text: "No tiene permisos para ejecutar esta acción",
-                type: "error",
-                confirmButtonClass: 'btn-danger'
+                icon: "error",
+                dangerMode: true
             });
         }
     });
@@ -75,8 +75,8 @@ $(function() {
             swal({
                 title: "Acceso Denegado",
                 text: "No tiene permisos para ejecutar esta acción",
-                type: "error",
-                confirmButtonClass: 'btn-danger'
+                icon: "error",
+                dangerMode: true
             });
         }
     });
@@ -106,8 +106,8 @@ $(function() {
             swal({
                 title: "Acceso Denegado",
                 text: "No tiene permisos para ejecutar esta acción",
-                type: "error",
-                confirmButtonClass: 'btn-danger'
+                icon: "error",
+                dangerMode: true
             });
         }
     });
@@ -138,8 +138,8 @@ $(function() {
             swal({
                 title: "Acceso Denegado",
                 text: "No tiene permisos para ejecutar esta acción",
-                type: "error",
-                confirmButtonClass: 'btn-danger'
+                icon: "error",
+                dangerMode: true
             });
         }
     });
@@ -174,8 +174,8 @@ $(function() {
             swal({
                 title: "Acceso Denegado",
                 text: "No tiene permisos para ejecutar esta acción",
-                type: "error",
-                confirmButtonClass: 'btn-danger'
+                icon: "error",
+                dangerMode: true
             });
         }
     });
@@ -241,24 +241,30 @@ $(document).ready(function() {
 function modal_eliminar(id) {
     if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2) {
         swal({
-                title: "¿Estas seguro?",
-                text: "¿Desea eliminar este colaborador: " + getColaboradorNombre(id) + "?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonClass: "btn-warning",
-                confirmButtonText: "¡Sí, eliminar el registro!",
-                cancelButtonText: "Cancelar",
-                closeOnConfirm: false
+            title: "¿Estas seguro?",
+            text: "¿Desea eliminar este colaborador: " + getColaboradorNombre(id) + "?",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "Cancelar",
+                    visible: true
+                },
+                confirm: {
+                    text: "¡Sí, eliminar el registro!",
+                }
             },
-            function() {
+            closeOnClickOutside: false
+        }).then((willConfirm) => {
+            if (willConfirm === true) {
                 eliminarRegistro(id);
-            });
+            }
+        });
     } else {
         swal({
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
-            type: "error",
-            confirmButtonClass: 'btn-danger'
+            icon: "error",
+            dangerMode: true
         });
     }
 }
@@ -266,25 +272,30 @@ function modal_eliminar(id) {
 function modal_eliminarAsignacionColaborador(servicios_colaboradores_id, colaborador_id) {
     if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2) {
         swal({
-                title: "¿Estas seguro?",
-                text: "¿Desea eliminar este servicio para el colaborador: " + getColaboradorNombre(colaborador_id) +
-                    "?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonClass: "btn-warning",
-                confirmButtonText: "¡Sí, eliminar el registro!",
-                cancelButtonText: "Cancelar",
-                closeOnConfirm: false
+            title: "¿Estas seguro?",
+            text: "¿Desea eliminar este servicio para el colaborador: " + getColaboradorNombre(colaborador_id) + "?",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "Cancelar",
+                    visible: true
+                },
+                confirm: {
+                    text: "¡Sí, eliminar el registro!",
+                }
             },
-            function() {
+            closeOnClickOutside: false
+        }).then((willConfirm) => {
+            if (willConfirm === true) {
                 eliminarRegistroAsignacionColaborador(servicios_colaboradores_id, colaborador_id);
-            });
+            }
+        });
     } else {
         swal({
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
-            type: "error",
-            confirmButtonClass: 'btn-danger'
+            icon: "error",
+            dangerMode: true
         });
     }
 }
@@ -307,24 +318,30 @@ function getColaboradorNombre(id) {
 function modal_eliminarPuesto(id) {
     if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2) {
         swal({
-                title: "¿Estas seguro?",
-                text: "¿Desea eliminar este puesto",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonClass: "btn-warning",
-                confirmButtonText: "¡Sí, eliminar el registro!",
-                cancelButtonText: "Cancelar",
-                closeOnConfirm: false
+            title: "¿Estas seguro?",
+            text: "¿Desea eliminar este puesto",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "Cancelar",
+                    visible: true
+                },
+                confirm: {
+                    text: "¡Sí, eliminar el registro!",
+                }
             },
-            function() {
+            closeOnClickOutside: false
+        }).then((willConfirm) => {
+            if (willConfirm === true) {
                 eliminarPuesto(id);
-            });
+            }
+        });
     } else {
         swal({
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
-            type: "error",
-            confirmButtonClass: 'btn-danger'
+            icon: "error",
+            dangerMode: true
         });
     }
 }
@@ -332,24 +349,30 @@ function modal_eliminarPuesto(id) {
 function modal_eliminarServicio(id) {
     if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2) {
         swal({
-                title: "¿Estas seguro?",
-                text: "¿Desea eliminar este servicio",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonClass: "btn-warning",
-                confirmButtonText: "¡Sí, eliminar el registro!",
-                cancelButtonText: "Cancelar",
-                closeOnConfirm: false
+            title: "¿Estas seguro?",
+            text: "¿Desea eliminar este servicio",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "Cancelar",
+                    visible: true
+                },
+                confirm: {
+                    text: "¡Sí, eliminar el registro!",
+                }
             },
-            function() {
+            closeOnClickOutside: false
+        }).then((willConfirm) => {
+            if (willConfirm === true) {
                 eliminarServicio(id);
-            });
+            }
+        });
     } else {
         swal({
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
-            type: "error",
-            confirmButtonClass: 'btn-danger'
+            icon: "error",
+            dangerMode: true
         });
     }
 }
@@ -357,24 +380,30 @@ function modal_eliminarServicio(id) {
 function modal_eliminarJornadaColaboradores(colaborador_id, id) {
     if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2) {
         swal({
-                title: "¿Estas seguro?",
-                text: "¿Desea eliminar esta jornada para el profesional: " + getColaboradorNombre(id) + "?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonClass: "btn-warning",
-                confirmButtonText: "¡Sí, eliminar el registro!",
-                cancelButtonText: "Cancelar",
-                closeOnConfirm: false
+            title: "¿Estas seguro?",
+            text: "¿Desea eliminar esta jornada para el profesional: " + getColaboradorNombre(id) + "?",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "Cancelar",
+                    visible: true
+                },
+                confirm: {
+                    text: "¡Sí, eliminar el registro!",
+                }
             },
-            function() {
+            closeOnClickOutside: false
+        }).then((willConfirm) => {
+            if (willConfirm === true) {
                 eliminarJornadaColaboradores(id);
-            });
+            }
+        });
     } else {
         swal({
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
-            type: "error",
-            confirmButtonClass: 'btn-danger'
+            icon: "error",
+            dangerMode: true
         });
     }
 }
@@ -393,7 +422,7 @@ function eliminarPuesto(id) {
                 swal({
                     title: "Success",
                     text: "Registro eliminado correctamente",
-                    type: "success",
+                    icon: "success",
                     timer: 3000, //timeOut for auto-close
                 });
                 $('#registrar_puestos').modal('hide');
@@ -401,22 +430,22 @@ function eliminarPuesto(id) {
                 swal({
                     title: "Error",
                     text: "Error al eliminar el registro",
-                    type: "error",
-                    confirmButtonClass: 'btn-danger'
+                    icon: "error",
+                    dangerMode: true
                 });
             } else if (registro == 3) {
                 swal({
                     title: "Error",
                     text: "No se puede eliminar el registro, existen valores almacenados, por favor corregir",
-                    type: "error",
-                    confirmButtonClass: 'btn-danger'
+                    icon: "error",
+                    dangerMode: true
                 });
             } else {
                 swal({
                     title: "Error",
                     text: "No se pudo procesar su solicitud",
-                    type: "error",
-                    confirmButtonClass: 'btn-danger'
+                    icon: "error",
+                    dangerMode: true
                 });
             }
         }
@@ -438,7 +467,7 @@ function eliminarServicio(id) {
                 swal({
                     title: "Success",
                     text: "Registro eliminado correctamente",
-                    type: "success",
+                    icon: "success",
                     timer: 3000, //timeOut for auto-close
                 });
                 $('#registrar_servicios').modal('hide');
@@ -446,22 +475,22 @@ function eliminarServicio(id) {
                 swal({
                     title: "Error",
                     text: "Error al eliminar el registro",
-                    type: "error",
-                    confirmButtonClass: 'btn-danger'
+                    icon: "error",
+                    dangerMode: true
                 });
             } else if (registro == 3) {
                 swal({
                     title: "Error",
                     text: "No se puede eliminar el registro, existen valores almacenados, por favor corregir",
-                    type: "error",
-                    confirmButtonClass: 'btn-danger'
+                    icon: "error",
+                    dangerMode: true
                 });
             } else {
                 swal({
                     title: "Error",
                     text: "No se pudo procesar su solicitud",
-                    type: "error",
-                    confirmButtonClass: 'btn-danger'
+                    icon: "error",
+                    dangerMode: true
                 });
             }
         }
@@ -481,7 +510,7 @@ function eliminarJornadaColaboradores(id) {
                 swal({
                     title: "Success",
                     text: "Registro eliminado correctamente",
-                    type: "success",
+                    icon: "success",
                     timer: 3000, //timeOut for auto-close
                 });
                 $('#registrar_servicios_colaboradores').modal('hide');
@@ -490,15 +519,15 @@ function eliminarJornadaColaboradores(id) {
                 swal({
                     title: "Error",
                     text: "Error al eliminar el registro",
-                    type: "error",
-                    confirmButtonClass: 'btn-danger'
+                    icon: "error",
+                    dangerMode: true
                 });
             } else {
                 swal({
                     title: "Error",
                     text: "No se puede procesar su solicitud",
-                    type: "error",
-                    confirmButtonClass: 'btn-danger'
+                    icon: "error",
+                    dangerMode: true
                 });
             }
         }
@@ -520,7 +549,7 @@ function eliminarRegistro(id) {
                 swal({
                     title: "Success",
                     text: "Registro eliminado correctamente",
-                    type: "success",
+                    icon: "success",
                     timer: 3000, //timeOut for auto-close
                 });
                 return false;
@@ -528,22 +557,22 @@ function eliminarRegistro(id) {
                 swal({
                     title: "Error",
                     text: "No se puede procesar su solicitud",
-                    type: "error",
-                    confirmButtonClass: 'btn-danger'
+                    icon: "error",
+                    dangerMode: true
                 });
             } else if (registro == 3) {
                 swal({
                     title: "Error",
                     text: "Lo sentimos el colaborador tiene asignado un usuario, no se puede eliminar",
-                    type: "error",
-                    confirmButtonClass: 'btn-danger'
+                    icon: "error",
+                    dangerMode: true
                 });
             } else {
                 swal({
                     title: "Error",
                     text: "No se puede procesar su solicitud",
-                    type: "error",
-                    confirmButtonClass: 'btn-danger'
+                    icon: "error",
+                    dangerMode: true
                 });
             }
         }
@@ -564,7 +593,7 @@ function eliminarRegistroAsignacionColaborador(servicios_colaboradores_id, colab
             swal({
                 title: "Success",
                 text: "Registro eliminado correctamente",
-                type: "success",
+                icon: "success",
                 timer: 3000, //timeOut for auto-close
             });
             return false;
@@ -617,8 +646,8 @@ function editarRegistro(id) {
         swal({
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
-            type: "error",
-            confirmButtonClass: 'btn-danger'
+            icon: "error",
+            dangerMode: true
         });
     }
 }
@@ -632,8 +661,8 @@ function reporteEXCEL() {
         swal({
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
-            type: "error",
-            confirmButtonClass: 'btn-danger'
+            icon: "error",
+            dangerMode: true
         });
     }
 }

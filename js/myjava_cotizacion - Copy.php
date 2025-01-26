@@ -16,7 +16,7 @@ $('#acciones_atras').on('click', function(e){
 		swal({
 		  title: "Tiene datos en la Cotización",
 		  text: "¿Esta seguro que desea volver, recuerde que tiene información en la cotización la perderá?",
-		  type: "warning",
+		  icon: "warning",
 		  showCancelButton: true,
 		  confirmButtonClass: "btn-warning",
 		  confirmButtonText: "¡Si, deseo volver!",

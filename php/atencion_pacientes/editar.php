@@ -125,6 +125,7 @@ $datos = array(
 	 14 => $servicio_id,	 
 	 15 => $estado_civil,
 	 16 => $num_hijos,
+	 17 => $anos,
 );	
 	
 echo json_encode($datos);

@@ -42,15 +42,15 @@ $(function(){
 			swal({
 				title: "Success", 
 				text: "Importación de CSV correctamente",
-				type: "success", 
+				icon: "success", 
 			});			 
 			 return false;	 
 		  }else{
 			swal({
 				title: "Error", 
 				text: "Error en la importación del CSV",
-				type: "error", 
-				confirmButtonClass: 'btn-danger'
+				icon: "error",
+				dangerMode: true
 			});			 
 			return false;
           }
@@ -61,8 +61,8 @@ $(function(){
 		swal({
 			title: "Error", 
 			text: "Selecciona un archivo CSV para importar",
-			type: "error", 
-			confirmButtonClass: 'btn-danger'
+			icon: "error",
+			dangerMode: true
 		});			
 		return false;
 	}

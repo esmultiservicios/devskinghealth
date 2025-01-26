@@ -7,6 +7,7 @@ $pacientes_id = $_POST['receta_pacientes_id'];
 $colaboradorId = $_POST['receta_colaboradorId'];
 $servicioId = $_POST['receta_servicioId'];
 $empresa_id = $_SESSION['empresa_id'];
+$estado = 1;
 
 $productos = $_POST['producto'];
 
@@ -30,8 +31,8 @@ if (!empty($pacientes_id) && !empty($productos) && !empty($descripciones)) {
 
     try {
         // Insertar en la tabla recetas
-        $stmt_receta = $mysqli->prepare("INSERT INTO recetas (pacientes_id, colaborador_id , servicio_id , empresa_id, fecha) VALUES (?, ?, ?, ?, ?)");
-        $stmt_receta->bind_param("iiiis", $pacientes_id, $colaboradorId, $servicioId, $empresa_id, $fecha);
+        $stmt_receta = $mysqli->prepare("INSERT INTO recetas (pacientes_id, colaborador_id , servicio_id , empresa_id, fecha, estado) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt_receta->bind_param("iiiis", $pacientes_id, $colaboradorId, $servicioId, $empresa_id, $fecha, $estado);
         $stmt_receta->execute();
         $receta_id = $stmt_receta->insert_id; // Obtener el ID de la receta insertada
 
