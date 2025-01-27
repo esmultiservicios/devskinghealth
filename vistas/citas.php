@@ -83,7 +83,7 @@ $año=date("Y", strtotime($fecha));
 						<div class="input-group-append">				
 							<span class="input-group-text"><div class="sb-nav-link-icon"></div>Profesional</span>
 						</div>
-						<select id="medico_general" name="medico_general" class="selectpicker" title="Consultorio" data-live-search="true" data-size="7">
+						<select id="medico_general" name="medico_general" class="selectpicker" title="Profesional" data-live-search="true" data-size="7">
 						</select>
 					</div>
 				</div>													
