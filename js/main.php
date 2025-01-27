@@ -857,6 +857,46 @@ function getGithubVersion() {
 }
 
 function printBill(facturas_id) {
+    // Añadir los parámetros al formulario
+    var params = {
+        "id": facturas_id,
+        "type": "Factura_media_cami",
+        "db": "<?php echo DB; ?>"
+    };
+
+    viewReport(params);	
+}
+
+//INICIO FUNCION PARA OBTENER REPORTES DESDE IIS
+/**
+ * viewReport
+ * Función para generar y visualizar reportes en una nueva pestaña mediante un POST dinámico.
+ * 
+ * @param {Object} params Objeto con los parámetros necesarios para generar el reporte.
+ *                        Debe contener las claves y valores esperados por el servidor IIS.
+ * 
+ * @example
+ * // Ejemplo 1: Generar un reporte con parámetros básicos
+ * var params = {
+ *     "id": 123,              // ID del reporte o recurso
+ *     "type": "Reporte",      // Tipo de reporte
+ *     "db": "mi_base_datos"   // Nombre de la base de datos
+ * };
+ * viewReport(params);
+ * 
+ * @example
+ * // Ejemplo 2: Generar un reporte para usuarios específicos
+ * var params = {
+ *     "user_id": 456,         // ID del usuario
+ *     "type": "Usuario",      // Tipo de reporte
+ *     "year": 2024            // Año del reporte
+ * };
+ * viewReport(params);
+ * 
+ * @throws {Error} Si la URL del servidor no está definida o es inválida.
+ * @throws {Error} Si los parámetros enviados no son un objeto válido.
+ */
+function viewReport(params) {
     // Asignar un valor vacío si SERVERURLWINDOWS no está definido
     var url = "<?php echo defined('SERVERURLWINDOWS') ? SERVERURLWINDOWS : ''; ?>";
 
@@ -868,7 +908,7 @@ function printBill(facturas_id) {
             icon: "error",
             button: "Cerrar",
         });
-        return;  // Salir de la función si la URL no está definida
+        return; // Salir de la función si la URL no está definida
     }
 
     // Crear un formulario dinámico
@@ -876,19 +916,26 @@ function printBill(facturas_id) {
     form.method = "POST";
     form.action = url;
 
-    // Añadir los parámetros al formulario
-    var params = {
-        "id": facturas_id,
-        "type": "Factura_media",
-        "db": "<?php echo DB; ?>"
-    };
+    // Validar que params sea un objeto
+    if (typeof params !== "object" || params === null) {
+        swal({
+            title: "Error",
+            text: "Los parámetros enviados no son válidos.",
+            icon: "error",
+            button: "Cerrar",
+        });
+        return;
+    }
 
+    // Añadir los parámetros al formulario
     for (var key in params) {
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = key;
-        input.value = params[key];
-        form.appendChild(input);
+        if (params.hasOwnProperty(key)) {
+            var input = document.createElement("input");
+            input.type = "hidden";
+            input.name = key;
+            input.value = params[key];
+            form.appendChild(input);
+        }
     }
 
     // Abrir una nueva ventana
@@ -896,8 +943,9 @@ function printBill(facturas_id) {
 
     // Asegurarse de que la nueva ventana esté lista
     newWindow.document.body.appendChild(form);
-    
+
     // Enviar el formulario a la nueva ventana
-    form.submit();	
+    form.submit();
 }
+//FIN FUNCION PARA OBTENER REPORTES DESDE IIS
 </script>

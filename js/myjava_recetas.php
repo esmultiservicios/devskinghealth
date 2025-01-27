@@ -382,7 +382,13 @@ var print_recetas_dataTable = function(tbody, table){
 		e.preventDefault();
 		var data = table.row( $(this).parents("tr") ).data();
 			
-		getRecetaReporte(data.receta_id);	
+		var params = {
+			"id": data.receta_id,
+			"type": "Receta",
+			"db": "<?php echo DB; ?>"
+		};
+
+		viewReport(params);		
 	});
 }
 
@@ -394,57 +400,5 @@ var delete_recetas_dataTable = function(tbody, table){
 		
 		modal_rollback(data.receta_id, data.pacientes_id)
 	});
-}
-
-function getRecetaReporte(receta_id) {
-    // Asignar un valor vacío si SERVERURLWINDOWS no está definido
-    var url = "<?php echo defined('SERVERURLWINDOWS') ? SERVERURLWINDOWS : ''; ?>";
-
-    // Verificar si la URL está vacía o no definida
-    if (!url || url.trim() === "") {
-        swal({
-            title: "Error",
-            text: "La URL de destino no está definida.",
-            icon: "error",
-            button: "Cerrar",
-        });
-        return;  // Salir de la función si la URL no está definida
-    }
-
-    // Crear un formulario dinámico
-    var form = document.createElement("form");
-    form.method = "POST";
-    form.action = url;
-
-    // Añadir los parámetros al formulario
-
-	/*
-		"type": "Receta",
-		"type": "Factura_media",
-		"type": "Reporte_facturas",		
-	*/
-
-    var params = {
-        "id": receta_id,
-        "type": "Receta",
-        "db": "<?php echo DB; ?>"
-    };
-
-    for (var key in params) {
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = key;
-        input.value = params[key];
-        form.appendChild(input);
-    }
-
-    // Abrir una nueva ventana
-    var newWindow = window.open("", "_blank");
-
-    // Asegurarse de que la nueva ventana esté lista
-    newWindow.document.body.appendChild(form);
-    
-    // Enviar el formulario a la nueva ventana
-    form.submit();
 }
 </script>
