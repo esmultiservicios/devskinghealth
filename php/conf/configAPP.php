@@ -28,8 +28,8 @@ define('SERVERURL', $baseURL);
 $urlLogo = "https://wi.fastsolutionhn.com/files/skinghealt_logo.png";
 define('SERVERURLLOGO', $urlLogo);
 
-$urlWindows = 'https://wi.fastsolutionhn.com/Rpt/esmultiservicios.aspx';
-//$urlWindows = 'http://localhost:58197/esmultiservicios.aspx';
+//$urlWindows = 'https://wi.fastsolutionhn.com/Rpt/esmultiservicios.aspx';
+$urlWindows = 'http://localhost:58197/esmultiservicios.aspx';
 define('SERVERURLWINDOWS', $urlWindows);
 
 // Otras constantes
