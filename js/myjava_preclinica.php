@@ -40,7 +40,9 @@ $(document).ready(function() {
                 title: "Acceso Denegado",
                 text: "No tiene permisos para ejecutar esta acción",
                 icon: "error",
-                dangerMode: true
+                dangerMode: true,
+                closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
             });
         }
     });
@@ -82,7 +84,9 @@ $('#form_ausencia #Si').on('click', function(
                 title: "Error",
                 text: "El comentario no puede quedar en blanco",
                 icon: "error",
-                dangerMode: true
+                dangerMode: true,
+                closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
             });
             return false;
         }
@@ -91,7 +95,9 @@ $('#form_ausencia #Si').on('click', function(
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
             icon: "error",
-            dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
         });
     }
 });
@@ -140,7 +146,9 @@ $(document).ready(function(e) {
                             title: "Error",
                             text: "Registro no encontrado",
                             icon: "error",
-                            dangerMode: true
+                            dangerMode: true,
+                            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
                         });
                         $("#reg_preclinica").attr('disabled', true);
                         return false;
@@ -149,7 +157,9 @@ $(document).ready(function(e) {
                             title: "Error",
                             text: "Este es un usuario temporal, no se puede agregar la preclínica, o simplemente el usuario no existe",
                             icon: "error",
-                            dangerMode: true
+                            dangerMode: true,
+                            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
                         });
 
                         $("#reg_preclinica").attr('disabled', true)
@@ -159,7 +169,9 @@ $(document).ready(function(e) {
                             title: "Error",
                             text: "Este usuario es un familiar, solo se permite buscar usuarios, por favor verificar con el departamento de Admisión, para más detalles",
                             icon: "error",
-                            dangerMode: true
+                            dangerMode: true,
+                            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
                         });
 
                         $("#reg_preclinica").attr('disabled', true);
@@ -401,7 +413,9 @@ function editarRegistro(agenda_id, expediente) {
                 title: "Error",
                 text: "Este es un expediente temporal, no se puede almacenar",
                 icon: "error",
-                dangerMode: true
+                dangerMode: true,
+                closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
             });
         }
     } else {
@@ -409,7 +423,9 @@ function editarRegistro(agenda_id, expediente) {
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
             icon: "error",
-            dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
         });
     }
 }
@@ -452,6 +468,9 @@ function nosePresentoRegistro(id, pacientes_id) {
                     closeModal: false,
                 },
             },
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera             
         }).then((value) => {
             if (value === null || value.trim() === "") {
                 swal("¡Necesita escribir algo!", { icon: "error" });
@@ -464,7 +483,9 @@ function nosePresentoRegistro(id, pacientes_id) {
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
             icon: "error",
-            dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
         });
     }
 }
@@ -481,7 +502,9 @@ function eliminarRegistro(id, comentario) {
             title: "Acceso Denegado",
             text: "No se puede agregar/modificar registros fuera de este periodo",
             icon: "error",
-            dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
         });
         return false;
     } else {
@@ -497,6 +520,8 @@ function eliminarRegistro(id, comentario) {
                             text: "Registro removido correctamente",
                             icon: "success",
                             timer: 3000, //timeOut for auto-close
+                            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
                         });
                         pagination(1);
                     } else if (registro == 3) {
@@ -504,7 +529,9 @@ function eliminarRegistro(id, comentario) {
                             title: "Error",
                             text: "Este registro ya tiene almacenada una ausencia",
                             icon: "error",
-                            dangerMode: true
+                            dangerMode: true,
+                            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
                         });
 
                     } else if (registro == 4) {
@@ -512,7 +539,9 @@ function eliminarRegistro(id, comentario) {
                             title: "Error",
                             text: "Este usuario ya ha sido precliniado, no puede marcarle una ausencia",
                             icon: "error",
-                            dangerMode: true
+                            dangerMode: true,
+                            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
                         });
                         return false;
                     } else {
@@ -520,7 +549,9 @@ function eliminarRegistro(id, comentario) {
                             title: "Error",
                             text: "Error al mover el registro",
                             icon: "error",
-                            dangerMode: true
+                            dangerMode: true,
+                            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
                         });
                     }
                 }
@@ -531,7 +562,9 @@ function eliminarRegistro(id, comentario) {
                 title: "Error",
                 text: "No se puede ejecutar esta acción fuera de esta fecha",
                 icon: "error",
-                dangerMode: true
+                dangerMode: true,
+                closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
             });
         }
     }
@@ -594,7 +627,9 @@ function evaluarRegistrosPendientes() {
                         " de hacer su Preclínica en este mes de " + datos[1] +
                         ". Debe revisar sus registros pendientes para todos los servicios.",
                     icon: 'warning',
-                    confirmButtonClass: 'btn-warning'
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
                 });
             }
         }

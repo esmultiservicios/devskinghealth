@@ -116,7 +116,9 @@ function reporteEXCEL(){
 		title: "Error", 
 		text: "Debe seleccionar por lo menos una opción de búsqueda",
 		icon: "error", 
-		dangerMode: true
+		dangerMode: true,
+		closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+		closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 	});		  
   }		
 }
@@ -140,7 +142,9 @@ function reporteEXCELDiario(){
 			title: "Error", 
 			text: "Debe seleccionar por lo menos una opción de búsqueda",
 			icon: "error", 
-			dangerMode: true
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 		});	  
 	}		
 }
@@ -185,6 +189,9 @@ function modal_eliminarPreclinica(preclinica_id, pacientes_id){
 				closeModal: false,
 				},
 			},
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera			
 		}).then((value) => {
 			if (value === null || value.trim() === "") {
 				swal("¡Necesita escribir algo!", { icon: "error" });
@@ -197,7 +204,9 @@ function modal_eliminarPreclinica(preclinica_id, pacientes_id){
 			title: "Acceso Denegado", 
 			text: "No tiene permisos para ejecutar esta acción",
 			icon: "error", 
-			dangerMode: true
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 		});					 
 	}	
 }
@@ -232,6 +241,9 @@ function modal_eliminarPostClinica(postclinica_id, pacientes_id){
 				closeModal: false,
 				},
 			},
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera			
 		}).then((value) => {
 			if (value === null || value.trim() === "") {
 				swal("¡Necesita escribir algo!", { icon: "error" });
@@ -244,7 +256,9 @@ function modal_eliminarPostClinica(postclinica_id, pacientes_id){
 			title: "Acceso Denegado", 
 			text: "No tiene permisos para ejecutar esta acción",
 			icon: "error", 
-			dangerMode: true
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 		});					 
 	}	
 }
@@ -263,7 +277,9 @@ function eliminarPreclinica(id, comentario){
 				title: "Error", 
 				text: "No se puede agregar/modificar registros fuera de este periodo",
 				icon: "error", 
-				dangerMode: true
+				dangerMode: true,
+				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 			});	 		 
 			return false;	
 		}else{	
@@ -278,6 +294,8 @@ function eliminarPreclinica(id, comentario){
 						title: "Success", 
 						text: "Registro eliminado correctamente",
 						icon: "success", 
+						closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+						closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 					});						 
 					pagination_preclinica(1);			 
 				 }else if(registro == 2){
@@ -285,7 +303,9 @@ function eliminarPreclinica(id, comentario){
 						title: "Error", 
 						text: "Error al Eliminar el Registro",
 						icon: "error", 
-						dangerMode: true
+						dangerMode: true,
+						closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+						closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 					});
 					pagination_preclinica(1);			 
 				 }else if(registro == 3){
@@ -293,7 +313,9 @@ function eliminarPreclinica(id, comentario){
 						title: "Error", 
 						text: "No se puede eliminar este registro, existe información en la atención del usuario",
 						icon: "error", 
-						dangerMode: true
+						dangerMode: true,
+						closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+						closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 					});
 					pagination_preclinica(1);			 
 				 }else{		
@@ -301,7 +323,9 @@ function eliminarPreclinica(id, comentario){
 						title: "Error", 
 						text: "No se puede eliminar este registro, por favor intente de nuevo más tarde",
 						icon: "error", 
-						dangerMode: true
+						dangerMode: true,
+						closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+						closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 					});
 				 }
 				 return false;
@@ -312,7 +336,9 @@ function eliminarPreclinica(id, comentario){
 					title: "Error", 
 					text: "No se puede agregar/modificar registros fuera de esta fecha",
 					icon: "error", 
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});			   
 			   return false;			
 			}	
@@ -322,7 +348,9 @@ function eliminarPreclinica(id, comentario){
 		title: "Acceso Denegado", 
 		text: "No tiene permisos para ejecutar esta acción",
 		icon: "error", 
-		dangerMode: true
+		dangerMode: true,
+		closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+		closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 	});		
   }
 }
@@ -379,7 +407,9 @@ function editarPreclinica(preclinica_id){
 		title: "Acceso Denegado", 
 		text: "No tiene permisos para ejecutar esta acción",
 		icon: "error", 
-		dangerMode: true
+		dangerMode: true,
+		closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+		closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 	});		
 						 
    }  
@@ -394,7 +424,9 @@ $('#form_main #exportar').on('click', function(e){ // add event submit We don't 
 		title: "Acceso Denegado", 
 		text: "No tiene permisos para ejecutar esta acción",
 		icon: "error", 
-		dangerMode: true
+		dangerMode: true,
+		closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+		closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 	});						 
  }		 
 });
@@ -408,7 +440,9 @@ $('#form_main #reporte_diario').on('click', function(e){ // add event submit We 
 		title: "Acceso Denegado", 
 		text: "No tiene permisos para ejecutar esta acción",
 		icon: "error", 
-		dangerMode: true
+		dangerMode: true,
+		closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+		closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 	});					 
  }		 
 });

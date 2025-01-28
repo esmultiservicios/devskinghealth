@@ -56,7 +56,9 @@ $('#reg_manual').on('click', function(
             title: "Error",
             text: "Hay registros en blanco, por favor corregir",
             icon: "error",
-            dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
         });
         return false;
     }
@@ -72,7 +74,9 @@ $('#convertir_manual').on('click', function(
             title: 'Acceso Denegado',
             text: 'No tiene permisos para ejecutar esta acción',
             icon: 'error',
-            dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
         });
     }
 });
@@ -110,7 +114,9 @@ function modalPacientes(){
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
             icon: "error",
-            dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
         });
     }    
 }
@@ -140,7 +146,9 @@ function modalProfesion(){
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
             icon: "error",
-            dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
         });
     }
 }
@@ -188,7 +196,9 @@ function showExpediente(pacientes_id) {
                     title: "Error",
                     text: "Por favor intentelo de nuevo más tarde",
                     icon: "error",
-                    dangerMode: true
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
                 });
             } else {
                 $('#mensaje_show').modal({
@@ -219,7 +229,9 @@ function modal_eliminarProfesional(profesional_id) {
                     text: "¡Sí, eliminar el registro!",
                 }
             },
-            closeOnClickOutside: false
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
         }).then((willConfirm) => {
             if (willConfirm === true) {
                 eliminarProfesional(profesional_id);
@@ -230,7 +242,9 @@ function modal_eliminarProfesional(profesional_id) {
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
             icon: "error",
-            dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
         });
     }
 }
@@ -261,7 +275,9 @@ function modal_eliminar(pacientes_id) {
                     text:"¡Sí, eliminar el registro!",
                 }
             },
-            closeOnClickOutside: false
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
         }).then((willConfirm) => {
             if (willConfirm === true) {
                 eliminarRegistro(pacientes_id);
@@ -292,7 +308,9 @@ function modal_eliminar(pacientes_id) {
                     text: "¡Sí, eliminar el registro!",
                 }
             },
-            closeOnClickOutside: false
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
         }).then((willConfirm) => {
             if (willConfirm === true) {
                 eliminarRegistro(pacientes_id);
@@ -303,7 +321,9 @@ function modal_eliminar(pacientes_id) {
             title: 'Acceso Denegado',
             text: 'No tiene permisos para ejecutar esta acción',
             icon: 'error',
-            dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
         });
         return false;
     }
@@ -379,7 +399,9 @@ function editarRegistro(pacientes_id) {
             title: 'Acceso Denegado',
             text: 'No tiene permisos para ejecutar esta acción',
             icon: 'error',
-            dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
         });
         return false;
     }
@@ -398,6 +420,8 @@ function eliminarProfesional(id) {
                     text: "Registro eliminado correctamente",
                     icon: "success",
                     timer: 3000, //timeOut for auto-clos
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera                    
                 });
                 paginationPorfesionales(1);
                 $('#modal_profesiones').modal('hide');
@@ -407,7 +431,9 @@ function eliminarProfesional(id) {
                     title: "Error",
                     text: "No se puede eliminar este registro",
                     type: "error",
-                    dangerMode: true
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
                 return false;
             } else if (registro == 3) {
@@ -415,7 +441,9 @@ function eliminarProfesional(id) {
                     title: "Error",
                     text: "No se puede eliminar este registro, cuenta con información almacenada",
                     icon: "error",
-                    dangerMode: true
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
                 return false;
             } else {
@@ -423,7 +451,9 @@ function eliminarProfesional(id) {
                     title: "Error",
                     text: "Error al completar el registro",
                     icon: "error",
-                    dangerMode: true
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
                 return false;
             }
@@ -445,6 +475,8 @@ function eliminarRegistro(pacientes_id) {
                     text: "Registro eliminado correctamente",
                     type: "success",
                     timer: 3000, //timeOut for auto-clos
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
                 listar_pacientes();
                 return false;
@@ -453,7 +485,9 @@ function eliminarRegistro(pacientes_id) {
                     title: "Error",
                     text: "No se puede eliminar este registro",
                     icon: "error",
-                    dangerMode: true
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
                 return false;
             } else if (registro == 3) {
@@ -461,7 +495,9 @@ function eliminarRegistro(pacientes_id) {
                     title: "Error",
                     text: "No se puede eliminar este registro, cuenta con información almacenada",
                     icon: "error",
-                    dangerMode: true
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
                 return false;
             } else {
@@ -469,7 +505,9 @@ function eliminarRegistro(pacientes_id) {
                     title: "Error",
                     text: "Error al completar el registro",
                     icon: "error",
-                    dangerMode: true
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
                 return false;
             }
@@ -494,6 +532,8 @@ function convertirExpedientetoTemporal() {
                     text: "El usuario se ha convertido a temporal",
                     icon: "success",
                     timer: 3000, //timeOut for auto-close
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
                 $('#agregar_expediente_manual').modal('hide');
                 $('#formulario_agregar_expediente_manual #expediente_manual').val('TEMP');
@@ -507,7 +547,9 @@ function convertirExpedientetoTemporal() {
                     title: "Error",
                     text: "No se puede procesar su solicitud",
                     icon: "error",
-                    confirmButtonClass: "btn-danger"
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
                 return false;
             }
@@ -530,6 +572,8 @@ function registrarExpedienteManual() {
                     text: "Registro completado correctamente",
                     icon: "success",
                     timer: 3000, //timeOut for auto-clos
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
                 $('#agregar_expediente_manual').modal('hide');
                 listar_pacientes();
@@ -538,28 +582,36 @@ function registrarExpedienteManual() {
                     title: "Error",
                     text: "No se pudo guardar el registro, por favor verifique la información",
                     icon: "error",
-                    dangerMode: true
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
             } else if (registro == 3) {
                 swal({
                     title: "Error",
                     text: "Error al ejecutar esta acción",
                     type: "error",
-                    dangerMode: true
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
             } else if (registro == 4) {
                 swal({
                     title: "Error",
                     text: "Error en los datos",
                     icon: "error",
-                    dangerMode: true
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
             } else {
                 swal({
                     title: "Error",
                     text: "Error al guardar el registro",
                     icon: "error",
-                    dangerMode: true
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
             }
         }
@@ -582,7 +634,9 @@ function busquedaUsuarioManualIdentidad() {
                     title: "Error",
                     text: "Este numero de Identidad ya existe, por favor corriga el numero e intente nuevamente",
                     icon: "error",
-                    confirmButtonClass: "btn-danger"
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
                 $("#formulario_agregar_expediente_manual #reg").attr('disabled', true);
                 return false;
@@ -608,7 +662,9 @@ function busquedaUsuarioManualExpediente() {
                     title: "Error",
                     text: "Este numero de Expediente ya existe, por favor corriga el numero e intente nuevamente",
                     icon: "error",
-                    confirmButtonClass: "btn-danger"
+                    dangerMode: true,
+                    closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                    closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
                 });
                 $("#formulario_agregar_expediente_manual #reg").attr('disabled', true);
                 return false;
@@ -694,7 +750,9 @@ function modal_agregar_expediente_manual(id, expediente) {
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
             icon: "error",
-            dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
         });
     }
 }
@@ -725,7 +783,9 @@ function modal_agregar_expediente(pacientes_id, expediente) {
                         text: "¡Si, deseo volver!",
                     }
                 },
-                closeOnClickOutside: false
+                dangerMode: true,
+                closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
             }).then((willConfirm) => {
                 if (willConfirm === true) {
                     asignarExpedienteaRegistro(pacientes_id);
@@ -736,7 +796,9 @@ function modal_agregar_expediente(pacientes_id, expediente) {
                 title: "Error",
                 text: "Este usuario: " + dato + " ya tiene un expediente asignado",
                 icon: "error",
-                dangerMode: true
+                dangerMode: true,
+                closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
             });
         }
     } else {
@@ -744,7 +806,9 @@ function modal_agregar_expediente(pacientes_id, expediente) {
             title: "Acceso Denegado",
             text: "No tiene permisos para ejecutar esta acción",
             icon: "error",
-            dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
         });
         return false;
     }
@@ -1090,7 +1154,9 @@ $('#formulario_pacientes #buscar_municipio_pacientes').on('click', function(e) {
             title: "Error",
             text: "Lo sentimos el departamento no debe estar vacío, antes de seleccionar esta opción por favor seleccione un departamento, por favor corregir",
             icon: "error",
-            dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
         });
     } else {
         listar_municipios_buscar();

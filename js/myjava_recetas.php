@@ -62,7 +62,9 @@ if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() 
 			title: "Error",
 			text: "Hay registros en blanco, por favor corregir",
 			icon: "error",
-			dangerMode: true
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 		});
 		return false;
 	}
@@ -71,7 +73,9 @@ if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() 
 		title: "Acceso Denegado",
 		text: "No tiene permisos para ejecutar esta acción",
 		icon: "error",
-		dangerMode: true
+        dangerMode: true,
+        closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+        closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 	});
 }
 });
@@ -117,6 +121,9 @@ async function modal_rollback(receta_id, pacientes_id) {
                     closeModal: false,
                 },
             },
+            dangerMode: true,
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera            
         }).then((value) => {
             if (value === null || value.trim() === "") {
                 swal("¡Necesita escribir algo!", { icon: "error" });
@@ -154,6 +161,8 @@ async function rollback(receta_id, comentario) {
                             title: "Success",
                             text: "Receta anulada correctamente",
                             icon: "success",
+                            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera                            
                         });
                         return false;
                     } else if (registro == 2) {
@@ -161,7 +170,9 @@ async function rollback(receta_id, comentario) {
                             title: "Error",
                             text: "Error al anular la receta",
                             icon: "error",
-                            dangerMode: true
+                            dangerMode: true,
+                            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
                         });
                         return false;
                     } else if (registro == 3) {
@@ -169,7 +180,9 @@ async function rollback(receta_id, comentario) {
                             title: "Error",
                             text: "Error al receta ya esta anulada, no se puede procesar esta solicituda",
                             icon: "error",
-                            dangerMode: true
+                            dangerMode: true,
+                            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
                         });
                         return false;
                     } else {
@@ -177,7 +190,9 @@ async function rollback(receta_id, comentario) {
                             title: "Error",
                             text: "Error al ejecutar esta acción",
                             icon: "error",
-                            dangerMode: true
+                            dangerMode: true,
+                            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
                         });
                     }
                 }
@@ -188,7 +203,9 @@ async function rollback(receta_id, comentario) {
                 title: "Error",
                 text: "No se puede ejecutar esta acción fuera de esta fecha",
                 icon: "error",
-                dangerMode: true
+                dangerMode: true,
+                closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+                closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
             });
         }
     } catch (error) {

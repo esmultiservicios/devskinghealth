@@ -110,14 +110,14 @@ function getSaludoSistema(){
 		success:function(data){	
 		  if(data == "Error"){
 			swal({
-			  title: "Sesión Finalizada",
-			  text: "Lo sentimos su sesión ha vencido, por favor inicie su sesión nuevamente",
-			  icon: "info",
-			  showCancelButton: false,
-			  confirmButtonText: "¡Está bien, llévame al Inicio!",
-			  cancelButtonText: "Cancelar",
-			  closeOnConfirm: false,
-			  showLoaderOnConfirm: true
+            title: "Sesión Finalizada",
+            text: "Lo sentimos su sesión ha vencido, por favor inicie su sesión nuevamente",
+            icon: "info",
+            showCancelButton: false,
+            confirmButtonText: "¡Está bien, llévame al Inicio!",
+            cancelButtonText: "Cancelar",
+            closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+            closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 			}, function () {
 			setTimeout(function () {
 				redireccionarsalida();
@@ -696,7 +696,9 @@ function confirmar(agenda_id, colaborador_id, servicio_id){
 			title: "Error", 
 			text: "Lo sentimos esta opción no esta disponible",
 			icon: "error",
-			dangerMode: true
+         dangerMode: true,
+         closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+         closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 		});		  
 	}
 }
@@ -708,6 +710,8 @@ function mostrarAlerta(tipo, titulo, mensaje) {
         text: mensaje,
         icon: tipo,  // "success", "error", "warning", "info"
         button: "Aceptar",
+        closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+        closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
     });
 }
 
