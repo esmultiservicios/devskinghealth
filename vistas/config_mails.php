@@ -142,7 +142,7 @@ $mysqli->close();//CERRAR CONEXIÓN
                         <div class="sb-nav-link-icon"></div><i class="far fa-save fa-lg"></i> Registrar
                     </button>
                     <button class="btn btn-warning ml-2" form="formulario_registros" type="submit" id="edi">
-                        <div class="sb-nav-link-icon"></div><i class="far fa-save fa-lg"></i> Edtiar
+                        <div class="sb-nav-link-icon"></div><i class="far fa-save fa-lg"></i> Editar
                     </button>
                 </div>
             </div>
