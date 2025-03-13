@@ -3,7 +3,9 @@ session_start();
 include "../funtions.php";
 	
 //CONEXION A DB
+$db_main = DBIZZY;
 $mysqli = connect_mysqli(); 
+$mysqliOtro = connect_mysqli_db($db_main); 
 
 $facturas_id = $_POST['facturas_id'];
 $pacientes_id = $_POST['pacientes_id'];
@@ -17,12 +19,13 @@ $fecha_registro = date("Y-m-d H:i:s");
 $activo = 1;
 $estado = 4;//ESTADO FACTURA CREDITO
 $tipo_factura = 1;//CONTADO
+$db_main = DBIZZY;
 
 //CONSULTAR DATOS DE LA SECUENCIA DE FACTURACION
 $query_secuencia = "SELECT secuencia_facturacion_id, prefijo, siguiente AS 'numero', rango_final, fecha_limite, incremento, relleno
    FROM secuencia_facturacion
    WHERE activo = '$activo' AND empresa_id = '$empresa_id'";
-$result = $mysqli->query($query_secuencia) or die($mysqli->error);
+$result = $mysqliOtro->query($query_secuencia) or die($mysqliOtro->error);
 $consulta2 = $result->fetch_assoc();
 
 $secuencia_facturacion_id = "";
@@ -259,4 +262,3 @@ if($pacientes_id != "" && $colaborador_id != "" && $servicio_id != ""){
 }
 
 echo json_encode($datos);
-?>

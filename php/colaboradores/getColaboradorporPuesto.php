@@ -9,9 +9,7 @@ $puesto_id = $_POST['puesto_id'];
 
 $consulta = "SELECT c.colaborador_id AS 'colaborador_id', CONCAT(c.nombre,' ',c.apellido) 'colaborador'
        FROM colaboradores AS c
-       INNER JOIN users AS s
-       ON c.colaborador_id = s.colaborador_id
-       WHERE c.puesto_id = '$puesto_id' AND s.estatus = 1
+       WHERE c.puesto_id = '$puesto_id' AND c.estatus = 1
        ORDER BY c.colaborador_id"; 
 $result = $mysqli->query($consulta);	   
   
@@ -25,4 +23,3 @@ if($result->num_rows>0){
 
 $result->free();//LIMPIAR RESULTADO
 $mysqli->close();//CERRAR CONEXIÓN
-?>

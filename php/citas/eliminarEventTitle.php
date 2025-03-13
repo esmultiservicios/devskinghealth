@@ -64,61 +64,57 @@ if($result->num_rows>0) {
 		$preclinica_id_consulta = $consultar_preclinica2['preclinica_id'];
 	}
 
-    if ($dias_transcurridos <= 30) {
-        if (empty($preclinica_id_consulta)) {
-            $status_agenda_cambio = "Eliminado";
+    if (empty($preclinica_id_consulta)) {
+        $status_agenda_cambio = "Eliminado";
 
-            $insert = "INSERT INTO agenda_cambio 
-                  VALUES('$numero','$colaborador_id', '$pacientes_id', '$expediente','$fecha_cita','$fecha_cita','$fecha_registro','$usuario_anterior','$usuario','Se ha eliminado la cita al usuario. Usuario que elimino la cita: $usuario. $comentario_','$status_agenda_cambio','$fecha_registro')";
-            $mysqli->query($insert);
+        $insert = "INSERT INTO agenda_cambio 
+                VALUES('$numero','$colaborador_id', '$pacientes_id', '$expediente','$fecha_cita','$fecha_cita','$fecha_registro','$usuario_anterior','$usuario','Se ha eliminado la cita al usuario. Usuario que elimino la cita: $usuario. $comentario_','$status_agenda_cambio','$fecha_registro')";
+        $mysqli->query($insert);
 
-            // INGRESAR REGISTROS EN LA ENTIDAD HISTORIAL
-            $historial_numero = historial();
-            $estado = "Agregar";
-            $observacion = "Se agrego informacion de este registro en la entidad en el historial de cambio de la agenda";
-            $modulo = "Citas";
-            $insert = "INSERT INTO historial 
-                    VALUES('$historial_numero','$pacientes_id','$expediente','$modulo','$id','$colaborador_id','$servicio_id','$fecha_cita','$estado','$observacion','$usuario','$fecha_registro')";
-            $mysqli->query($insert);
-            /*****************************************************/                
+        // INGRESAR REGISTROS EN LA ENTIDAD HISTORIAL
+        $historial_numero = historial();
+        $estado = "Agregar";
+        $observacion = "Se agrego informacion de este registro en la entidad en el historial de cambio de la agenda";
+        $modulo = "Citas";
+        $insert = "INSERT INTO historial 
+                VALUES('$historial_numero','$pacientes_id','$expediente','$modulo','$id','$colaborador_id','$servicio_id','$fecha_cita','$estado','$observacion','$usuario','$fecha_registro')";
+        $mysqli->query($insert);
+        /*****************************************************/                
 
-            $delete = "DELETE FROM lista_espera 
-                  WHERE fecha_cita = '$fecha' AND pacientes_id = '$pacientes_id' AND servicio = '$servicio_id' AND colaborador_id = '$colaborador_id'"; 
-            $mysqli->query($delete);
+        $delete = "DELETE FROM lista_espera 
+                WHERE fecha_cita = '$fecha' AND pacientes_id = '$pacientes_id' AND servicio = '$servicio_id' AND colaborador_id = '$colaborador_id'"; 
+        $mysqli->query($delete);
+
+        // INGRESAR REGISTROS EN LA ENTIDAD HISTORIAL
+        $historial_numero = historial();
+        $estado = "Eliminar";
+        $observacion = "Se elimino registro de la lista de espera";
+        $modulo = "Citas";
+        $insert = "INSERT INTO historial 
+                VALUES('$historial_numero','$pacientes_id','$expediente','$modulo','$id','$colaborador_id','$servicio_id','$fecha_cita','$estado','$observacion','$usuario','$fecha_registro')";
+        $mysqli->query($insert);
+        /*****************************************************/            
+
+        $delete = "DELETE FROM agenda WHERE agenda_id = '$id'";
+        $query = $mysqli->query($delete);
+
+        if ($query) {
+            $response['success'] = 'Cita eliminada correctamente';
 
             // INGRESAR REGISTROS EN LA ENTIDAD HISTORIAL
             $historial_numero = historial();
             $estado = "Eliminar";
-            $observacion = "Se elimino registro de la lista de espera";
+            $observacion = "Se elimino la cita para este registro";
             $modulo = "Citas";
             $insert = "INSERT INTO historial 
                     VALUES('$historial_numero','$pacientes_id','$expediente','$modulo','$id','$colaborador_id','$servicio_id','$fecha_cita','$estado','$observacion','$usuario','$fecha_registro')";
             $mysqli->query($insert);
-            /*****************************************************/            
-
-            $delete = "DELETE FROM agenda WHERE agenda_id = '$id'";
-            $query = $mysqli->query($delete);
-
-            if ($query) {
-                $response['success'] = 'Cita eliminada correctamente';
-
-                // INGRESAR REGISTROS EN LA ENTIDAD HISTORIAL
-                $historial_numero = historial();
-                $estado = "Eliminar";
-                $observacion = "Se elimino la cita para este registro";
-                $modulo = "Citas";
-                $insert = "INSERT INTO historial 
-                        VALUES('$historial_numero','$pacientes_id','$expediente','$modulo','$id','$colaborador_id','$servicio_id','$fecha_cita','$estado','$observacion','$usuario','$fecha_registro')";
-                $mysqli->query($insert);
-                /*****************************************************/
-            } else {
-                $response['error'] = 'Error al eliminar el registro';
-            }    
+            /*****************************************************/
         } else {
-            $response['error'] = 'Ya se realizo la preclínica para este usuario';
-        }
+            $response['error'] = 'Error al eliminar el registro';
+        }    
     } else {
-        $response['error'] = 'No se puede eliminar esta cita, el sobre pasa el tiempo permitido, en todo caso se le debe reprogramar';
+        $response['error'] = 'Ya se realizo la preclínica para este usuario';
     }
 }else{
     $response['error'] = 'no se puede eliminar el registro';

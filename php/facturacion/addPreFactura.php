@@ -3,7 +3,9 @@ session_start();
 include "../funtions.php";
 	
 //CONEXION A DB
+$db_main = DBIZZY;
 $mysqli = connect_mysqli(); 
+$mysqliOtro = connect_mysqli_db($db_main); 
 
 $pacientes_id = $_POST['pacientes_id'];
 $fecha = $_POST['fecha'];
@@ -21,7 +23,7 @@ $empresa_id = $_SESSION['empresa_id'];
 $query_secuencia = "SELECT secuencia_facturacion_id, prefijo, siguiente AS 'numero', rango_final, fecha_limite, incremento, relleno
    FROM secuencia_facturacion
    WHERE activo = '$activo' AND empresa_id = '$empresa_id'";
-$result = $mysqli->query($query_secuencia) or die($mysqli->error);
+$result = $mysqliOtro->query($query_secuencia) or die($mysqliOtro->error);
 $consulta2 = $result->fetch_assoc();
 
 $secuencia_facturacion_id = "";

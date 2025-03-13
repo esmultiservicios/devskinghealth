@@ -360,6 +360,20 @@ function connect_mysqli()
 	return $mysqli;
 }
 
+function connect_mysqli_db($db)
+{
+	$mysqli = mysqli_connect(SERVER, USER, PASS, $db);
+
+	$mysqli->set_charset('utf8');
+
+	if ($mysqli->connect_errno) {
+		echo "Fallo al conectar a MySQL: {$mysqli->connect_error}";
+		exit;
+	}
+
+	return $mysqli;
+}
+
 // FUNCION QUE PERMITE GENERAR LA CONTRASEÑA DE FORMA AUTOMATICA
 function generar_password_complejo()
 {

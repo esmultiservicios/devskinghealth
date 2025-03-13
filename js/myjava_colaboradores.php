@@ -965,7 +965,7 @@ function getServicioAsignacion() {
 $(document).ready(function() {
     $('#registrar_servicios_colaboradores #puesto_id').on('change', function() {
         var puesto_id = $('#puesto_id').val();
-        var url = '<?php echo SERVERURL; ?>php/colaboradores/getColaboradorpoPuesto.php';
+        var url = '<?php echo SERVERURL; ?>php/colaboradores/getColaboradorporPuesto.php';
         $.ajax({
             type: "POST",
             url: url,

@@ -3,7 +3,9 @@ session_start();
 include "../funtions.php";
 	
 //CONEXION A DB
+$db_main = DBIZZY;
 $mysqli = connect_mysqli(); 
+$mysqliOtro = connect_mysqli_db($db_main); 
 
 $facturas_id = $_POST['factura_id_mixto'];
 $fecha = date("Y-m-d");
@@ -44,7 +46,7 @@ if($resultTipoFactura->num_rows>0){
 $query_secuencia = "SELECT secuencia_facturacion_id, prefijo, siguiente AS 'numero', rango_final, fecha_limite, incremento, relleno
    FROM secuencia_facturacion
    WHERE activo = '$activo' AND empresa_id = '$empresa_id'";
-$result = $mysqli->query($query_secuencia) or die($mysqli->error);
+$result = $mysqliOtro->query($query_secuencia) or die($mysqliOtro->error);
 $consulta2 = $result->fetch_assoc();
 
 $secuencia_facturacion_id = "";
@@ -164,4 +166,3 @@ if($result_factura->num_rows==0){
 }
 
 echo json_encode($datos);
-?>
