@@ -433,6 +433,7 @@ function ejecutar($url)
 	return $url;
 }
 
+/*
 function getAgendatime($consultarJornadaJornada_id, $servicio, $consultar_colaborador_puesto_id, $consulta_agenda_id, $hora_h, $consulta_nuevos_devuelto, $consultarJornadaNuevos, $consultaJornadaTotal, $consulta_subsiguientes_devuelto)
 {
 	// USUARIO NUEVO
@@ -622,6 +623,41 @@ function getAgendatime($consultarJornadaJornada_id, $servicio, $consultar_colabo
 
 	return $datos;
 	// FIN EVALUACIÓN HORARIOS PARA LOS SERVICIOS SEGUN PROFESIONAL
+}*/
+
+function getAgendatime($consultarJornadaJornada_id, $servicio, $consultar_colaborador_puesto_id, $consulta_agenda_id, $hora_h, $consulta_nuevos_devuelto, $consultarJornadaNuevos, $consultaJornadaTotal, $consulta_subsiguientes_devuelto)
+{
+    // USUARIO NUEVO
+    if ($consulta_agenda_id == '') {
+        $colores = '#008000';  // VERDE USUARIOS NUEVOS
+    } else {
+        $colores = '#0071c5';  // AZUL OSCURO USUARIOS SUBSIGUIENTES
+    }
+
+    // INICIO EVALUACIÓN HORARIOS PARA LOS SERVICIOS SEGUN PROFESIONAL
+    $limite = $consultaJornadaTotal - $consulta_nuevos_devuelto;
+    $hora = '';
+
+    if ($consultarJornadaJornada_id != '') {  // INICIO PARA EVALUAR QUE EXISTA REGISTRO DEL COLABORADOR EN LA ENTIDAD jornada_colaborador
+        if ($consulta_nuevos_devuelto > $consultarJornadaNuevos) {  // EXCEDER EL LIMITE DE NUEVOS
+            $hora = 'NuevosExcede';
+        } else if ($consulta_subsiguientes_devuelto > $limite) {  // EXCEDER EL LIMITE DE SUBSIGUIENTES
+            $hora = 'SubsiguienteExcede';
+        } else {
+            $hora = $hora_h;  // ASIGNAR LA HORA QUE VIENE EN $hora_h
+        }
+    } else {
+        $hora = 'Vacio';  // EL PROFESIONAL NO TIENE ASIGNADA UNA JORNADA LABORAL, O SIMPLEMENTE NO TIENE UN SERVICIO ASIGNADO, NO SE LE PUEDEN AGENDAR USUARIOS
+        $colores = '';
+    }
+
+    $datos = array(
+        'hora' => $hora,
+        'colores' => $colores
+    );
+
+    return $datos;
+    // FIN EVALUACIÓN HORARIOS PARA LOS SERVICIOS SEGUN PROFESIONAL
 }
 
 function getEdad($fecha_de_nacimiento)
