@@ -57,6 +57,8 @@
                 <div class="dropdown-menu" aria-labelledby="dropdown05">
                     <a class="dropdown-item" href="<?php echo SERVERURL; ?>vistas/reporte_facturacion.php">Reporte de
                         Facturación</a>
+                    <a class="dropdown-item" href="<?php echo SERVERURL; ?>vistas/reporte_facturacion_combinado.php">Reporte de
+                        Facturación Combinado</a>                        
                     <a class="dropdown-item" href="<?php echo SERVERURL; ?>vistas/reporte_pagos.php">Reporte de
                         Pagos</a>
                 </div>
@@ -104,6 +106,8 @@
                         Ausencias</a>
                     <a class="dropdown-item" href="<?php echo SERVERURL; ?>vistas/reporte_facturacion.php">Reporte de
                         Facturación</a>
+                    <a class="dropdown-item" href="<?php echo SERVERURL; ?>vistas/reporte_facturacion_combinado.php">Reporte de
+                        Facturación Combinado</a>
                     <a class="dropdown-item" href="<?php echo SERVERURL; ?>vistas/reporte_pagos.php">Reporte de
                         Pagos</a>
                     <a class="dropdown-item" href="<?php echo SERVERURL; ?>vistas/reportes_enfermeria.php">Reporte de
@@ -200,6 +204,8 @@
                         Referidos</a>
                     <a class="dropdown-item" href="<?php echo SERVERURL; ?>vistas/reporte_facturacion.php">Reporte de
                         Facturación</a>
+                    <a class="dropdown-item" href="<?php echo SERVERURL; ?>vistas/reporte_facturacion_combinado.php">Reporte de
+                        Facturación Combinado</a>                        
                     <a class="dropdown-item" href="<?php echo SERVERURL; ?>vistas/reporte_pagos.php">Reporte de
                         Pagos</a>
                     <a class="dropdown-item" href="<?php echo SERVERURL; ?>vistas/reportes_enfermeria.php">Reporte de
