@@ -13,7 +13,7 @@ $empresa_id = $_SESSION['empresa_id'];
 
 // CONSULTAMOS EL NÚMERO ANTERIOR
 $queryNumero = "SELECT siguiente AS 'numero'
-    FROM secuencia_facturacion
+    FROM esmultiservicios_skincenter_izzy.secuencia_facturacion
     WHERE activo = 1 AND empresa_id = '$empresa_id'
     ORDER BY siguiente DESC LIMIT 1";
 $resultNumero = $mysqli->query($queryNumero) or die($mysqli->error);
@@ -25,7 +25,7 @@ if($resultNumero->num_rows > 0){
 
 // CONSULTAMOS EL NÚMERO MÁXIMO PERMITIDO
 $queryNumeroMaximo = "SELECT rango_final AS 'numero'
-    FROM secuencia_facturacion
+    FROM esmultiservicios_skincenter_izzy.secuencia_facturacion
     WHERE activo = 1 AND empresa_id = '$empresa_id'";
 $resultNumeroMaximo = $mysqli->query($queryNumeroMaximo) or die($mysqli->error);
 
@@ -38,7 +38,7 @@ $facturasPendientes = $numeroMaximo - $numeroAnterior;
 
 // OBTENEMOS LA FECHA LÍMITE DE FACTURACIÓN
 $querFechaLimite = "SELECT DATEDIFF(fecha_limite, NOW()) AS 'dias_transcurridos', fecha_limite AS 'fecha_limite'
-    FROM secuencia_facturacion
+    FROM esmultiservicios_skincenter_izzy.secuencia_facturacion
     WHERE activo = 1 AND empresa_id = '$empresa_id'";
 $resultNFechaLimite = $mysqli->query($querFechaLimite) or die($mysqli->error);
 

@@ -134,7 +134,7 @@ INNER JOIN esmultiservicios_skincenter_izzy.colaboradores AS co ON f.colaborador
 INNER JOIN esmultiservicios_skincenter_izzy.colaboradores AS co1 ON f.usuario = co1.colaboradores_id
 INNER JOIN esmultiservicios_skincenter_izzy.secuencia_facturacion AS sf ON f.secuencia_facturacion_id = sf.secuencia_facturacion_id
 INNER JOIN esmultiservicios_skincenter_izzy.documento AS d ON sf.documento_id = d.documento_id
-WHERE f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado $in AND f.empresa_id = $empresa_id AND sf.documento_id = 1 AND f.estado $in
+WHERE f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado $in AND f.empresa_id = $empresa_id AND sf.documento_id = 1
 
 ORDER BY numero DESC";
 
