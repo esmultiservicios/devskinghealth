@@ -96,14 +96,14 @@ if($result_factura->num_rows==0){
 			$mysqli->query($update_factura) or die($mysqli->error);	
 
 			//CONSULTAMOS EL NUMERO QUE SIGUE DE EN LA SECUENCIA DE FACTURACION
-			$numero_secuencia_facturacion = correlativo("siguiente", "secuencia_facturacion");
+			$numero_secuencia_facturacion = correlativodbMain("siguiente", "secuencia_facturacion", $db_main);
 			
 			//ACTUALIZAMOS LA SECUENCIA DE FACTURACION AL NUMERO SIGUIENTE		
 			$update = "UPDATE secuencia_facturacion 
 			SET 
 				siguiente = '$numero_secuencia_facturacion' 
 			WHERE secuencia_facturacion_id = '$secuencia_facturacion_id'";
-			$mysqli->query($update);
+			$mysqliOtro->query($update);
 		}else{
 			//ACTUALIZAMOS EL ESTADO DE LA FACTURA
 			$update_factura = "UPDATE facturas

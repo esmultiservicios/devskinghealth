@@ -2,8 +2,10 @@
 session_start();
 include '../funtions.php';
 
-// CONEXIÓN A DB
-$mysqli = connect_mysqli();
+//CONEXION A DB
+$db_main = DBIZZY;
+$mysqli = connect_mysqli(); 
+$mysqliOtro = connect_mysqli_db($db_main); 
 
 $colaborador_id = $_SESSION['colaborador_id'];
 $type = $_SESSION['type'];
@@ -11,6 +13,7 @@ $fechai = $_POST['fechai'];
 $fechaf = $_POST['fechaf'];
 $usuario = $_SESSION['colaborador_id'];
 $empresa_id = $_SESSION['empresa_id'];
+$estado = $_POST['estado'];
 
 if ($estado == 1) {
     $in = 'IN(2,4)';
@@ -36,7 +39,6 @@ SELECT
     f.cierre AS 'cierre', 
     (CASE WHEN f.tipo_factura = 1 THEN 'Contado' ELSE 'Crédito' END) AS 'tipo_documento', 
     f.tipo_factura,
-    -- Detalles de facturación (subconsulta)
     (
         SELECT SUM(fd.precio * fd.cantidad) 
         FROM facturas_detalle AS fd
@@ -66,14 +68,76 @@ SELECT
         SELECT SUM(fd.precio)
         FROM facturas_detalle AS fd
         WHERE fd.facturas_id = f.facturas_id
-    ) AS 'precio'  -- Aquí agregamos 'precio'
-FROM facturas AS f
-INNER JOIN pacientes AS p ON f.pacientes_id = p.pacientes_id
-INNER JOIN secuencia_facturacion AS sc ON f.secuencia_facturacion_id = sc.secuencia_facturacion_id
-INNER JOIN servicios AS s ON f.servicio_id = s.servicio_id
-INNER JOIN colaboradores AS c ON f.colaborador_id = c.colaborador_id
+    ) AS 'precio',
+    'CAMII' AS 'origen'
+FROM esmultiservicios_skincenter_cami.facturas AS f
+INNER JOIN esmultiservicios_skincenter_cami.pacientes AS p ON f.pacientes_id = p.pacientes_id
+INNER JOIN esmultiservicios_skincenter_izzy.secuencia_facturacion AS sc ON f.secuencia_facturacion_id = sc.secuencia_facturacion_id
+INNER JOIN esmultiservicios_skincenter_cami.servicios AS s ON f.servicio_id = s.servicio_id
+INNER JOIN esmultiservicios_skincenter_cami.colaboradores AS c ON f.colaborador_id = c.colaborador_id
 WHERE f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado $in AND f.empresa_id = $empresa_id
-ORDER BY f.number DESC";
+
+UNION ALL
+
+SELECT 
+    f.facturas_id AS 'facturas_id', 
+    f.fecha AS 'fecha', 
+    c.rtn AS 'identidad', 
+    c.nombre AS 'paciente',
+    sf.prefijo AS 'prefijo', 
+    f.number AS 'numero', 
+    '' AS 'servicio', 
+    CONCAT(co.nombre, ' ', co.apellido) AS 'profesional', 
+    sf.relleno AS 'relleno', 
+    DATE_FORMAT(f.fecha, '%d/%m/%Y') AS 'fecha1', 
+    '' AS 'pacientes_id', 
+    '' AS 'cierre', 
+    CASE 
+        WHEN f.tipo_factura = 1 THEN 'Contado' 
+        ELSE 'Crédito' 
+    END AS 'tipo_documento', 
+    f.tipo_factura,
+    (
+        SELECT SUM(fd.cantidad * fd.precio) 
+        FROM esmultiservicios_skincenter_izzy.facturas_detalles AS fd
+        WHERE fd.facturas_id = f.facturas_id
+    ) AS 'total_precio',
+    (
+        SELECT SUM(fd.cantidad) 
+        FROM esmultiservicios_skincenter_izzy.facturas_detalles AS fd
+        WHERE fd.facturas_id = f.facturas_id
+    ) AS 'cantidad',
+    (
+        SELECT SUM(fd.descuento) 
+        FROM esmultiservicios_skincenter_izzy.facturas_detalles AS fd
+        WHERE fd.facturas_id = f.facturas_id
+    ) AS 'descuento',
+    (
+        SELECT SUM(fd.isv_valor) 
+        FROM esmultiservicios_skincenter_izzy.facturas_detalles AS fd
+        WHERE fd.facturas_id = f.facturas_id
+    ) AS 'isv_neto',
+    (
+        SELECT SUM(fd.cantidad * fd.precio) + SUM(fd.isv_valor) - SUM(fd.descuento)
+        FROM esmultiservicios_skincenter_izzy.facturas_detalles AS fd
+        WHERE fd.facturas_id = f.facturas_id
+    ) AS 'total',
+    (
+        SELECT SUM(fd.precio)
+        FROM esmultiservicios_skincenter_izzy.facturas_detalles AS fd
+        WHERE fd.facturas_id = f.facturas_id
+    ) AS 'precio',
+    'IZZY' AS 'origen'
+FROM esmultiservicios_skincenter_izzy.facturas AS f
+INNER JOIN esmultiservicios_skincenter_izzy.clientes AS c ON f.clientes_id = c.clientes_id
+INNER JOIN esmultiservicios_skincenter_izzy.colaboradores AS co ON f.colaboradores_id = co.colaboradores_id
+INNER JOIN esmultiservicios_skincenter_izzy.colaboradores AS co1 ON f.usuario = co1.colaboradores_id
+INNER JOIN esmultiservicios_skincenter_izzy.secuencia_facturacion AS sf ON f.secuencia_facturacion_id = sf.secuencia_facturacion_id
+INNER JOIN esmultiservicios_skincenter_izzy.documento AS d ON sf.documento_id = d.documento_id
+WHERE f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado $in AND f.empresa_id = $empresa_id AND sf.documento_id = 1 AND f.estado $in
+
+ORDER BY numero DESC";
+
 
 $result = $mysqli->query($consulta) or die($mysqli->error);
 

@@ -219,7 +219,7 @@ var listar_reporte_facturacion = function(){
 		"destroy":true,	
 		"ajax":{
 			"method":"POST",
-			"url": "<?php echo SERVERURL; ?>php/reporte_facturacion/llenarDataTableReporteFacturas.php",
+			"url": "<?php echo SERVERURL; ?>php/reporte_facturacion_combinado/llenarDataTableReporteFacturas.php",
             "data": function(d) {
                 d.fechai = fechai;
                 d.fechaf = fechaf;
@@ -249,8 +249,7 @@ var listar_reporte_facturacion = function(){
 			{"data": "isv_neto"},	
 			{"data": "descuento"},
 			{"data": "total"},
-			{"data": "servicio"},
-			{"data": "profesional"}
+			{"data": "origen"}
 		],	
 		"footerCallback": function(row, data, start, end, display) {
             var api = this.api();

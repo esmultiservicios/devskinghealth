@@ -82,7 +82,7 @@ SELECT
     ) AS 'precio'  -- Aquí agregamos 'precio'
 FROM facturas AS f
 INNER JOIN pacientes AS p ON f.pacientes_id = p.pacientes_id
-INNER JOIN secuencia_facturacion AS sc ON f.secuencia_facturacion_id = sc.secuencia_facturacion_id
+INNER JOIN esmultiservicios_skincenter_izzy.secuencia_facturacion AS sc ON f.secuencia_facturacion_id = sc.secuencia_facturacion_id
 INNER JOIN servicios AS s ON f.servicio_id = s.servicio_id
 INNER JOIN colaboradores AS c ON f.colaborador_id = c.colaborador_id
 WHERE f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado $in

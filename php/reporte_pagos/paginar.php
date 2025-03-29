@@ -53,7 +53,7 @@ $query = "SELECT p.pagos_id AS 'pagos_id', p.fecha AS 'fecha_pago', p.importe AS
 	FROM pagos AS p
 	INNER JOIN facturas AS f
 	ON p.facturas_id = f.facturas_id
-	INNER JOIN secuencia_facturacion AS sc
+	INNER JOIN esmultiservicios_skincenter_izzysecuencia_facturacion AS sc
 	ON f.secuencia_facturacion_id = sc.secuencia_facturacion_id
 	INNER JOIN pacientes AS pac
 	ON f.pacientes_id = pac.pacientes_id

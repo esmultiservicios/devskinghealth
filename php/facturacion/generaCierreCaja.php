@@ -27,7 +27,7 @@ $mysqli->set_charset('utf8');
 
 $query = "SELECT e.nombre AS 'empresa', CONCAT(c.nombre, ' ', c.apellido) AS 'usuario'
 	FROM facturas AS f
-	INNER JOIN secuencia_facturacion AS sf
+	INNER JOIN esmultiservicios_skincenter_izzy.secuencia_facturacion AS sf
 	ON f.secuencia_facturacion_id = sf.secuencia_facturacion_id
 	INNER JOIN empresa AS e
 	ON sf.empresa_id = e.empresa_id
@@ -41,7 +41,7 @@ $result = $mysqli->query($query) or die($mysqli->error);
 //OBTENER DETALLE DE FACTURA
 $query_factura_detalle = "SELECT CONCAT(sf.prefijo, '', LPAD(f.number,sf.relleno,'0')) AS 'factura', f.importe AS 'importe'
 	FROM facturas AS f
-	INNER JOIN secuencia_facturacion AS sf
+	INNER JOIN esmultiservicios_skincenter_izzy.secuencia_facturacion AS sf
 	ON f.secuencia_facturacion_id = f.secuencia_facturacion_id
 	WHERE f.estado = 2 AND f.fecha = '$fecha'
 	GROUP BY f.facturas_id";

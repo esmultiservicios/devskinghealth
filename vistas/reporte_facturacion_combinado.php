@@ -223,8 +223,7 @@ $mysqli->close();  // CERRAR CONEXIÓN
                                 <th>ISV</th>
                                 <th>Descuento</th>
                                 <th>Neto</th>
-                                <th>Servicio</th>
-                                <th>Profesional</th>
+                                <th>Origen</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -235,7 +234,7 @@ $mysqli->close();  // CERRAR CONEXIÓN
                                 <th id="footer-isv"></th>
                                 <th id="footer-descuento"></th>
                                 <th id="footer-neto"></th>
-                                <th colspan="2"></th>
+                                <th colspan="1"></th>
                             </tr>
                         </tfoot>
                     </table>
