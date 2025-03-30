@@ -74,6 +74,7 @@ $query_historia = "SELECT pacientes_id, antecedentes, historia_clinica, examen_f
 	FROM atenciones_medicas
 	WHERE pacientes_id = '$pacientes_id'
 	ORDER BY atencion_id DESC limit 1";
+
 $result_historia = $mysqli->query($query_historia) or die($mysqli->error);
 	
 $antecedentes = "";

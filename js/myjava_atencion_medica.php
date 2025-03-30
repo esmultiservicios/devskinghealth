@@ -300,10 +300,11 @@ function editarRegistro(pacientes_id, agenda_id) {
 
                     $('#formulario_atenciones #fecha').val(array[7]);
                     $('#formulario_atenciones #fecha_nac').val(array[8]);
-                    $('#formulario_atenciones #antecedentes_medicos_no_psiquiatricos').val(array[9]);
-                    $('#formulario_atenciones #hospitaliaciones').val(array[10]);
-                    $('#formulario_atenciones #cirugias').val(array[11]);
-                    $('#formulario_atenciones #alergias').val(array[12]);
+
+                    $('#formulario_atenciones #antecedentes').val(array[9]);
+                    $('#formulario_atenciones #historia_clinica').val(array[10]);
+                    $('#formulario_atenciones #exame_fisico').val(array[11]);
+                    $('#formulario_atenciones #diagnostico').val(array[12]);
                     $('#formulario_atenciones #seguimiento_read').val(array[13]);
                     $('#formulario_atenciones #servicio_id').val(array[14]);
                     $('#formulario_atenciones #servicio_id').selectpicker('refresh');
@@ -330,16 +331,9 @@ function editarRegistro(pacientes_id, agenda_id) {
                     });
 
                     inicializarContadores(limites); // Iniciar el contador de caracteres con los límites
-                    inicializarSpeechRecognition(
-                    limites); // Inicializar reconocimiento de voz con los límites
+                    inicializarSpeechRecognition(limites); // Inicializar reconocimiento de voz con los límites
 
                     FormAtencionMedica();
-
-                    /*$('#modal_registro_atenciones').modal({
-                        show: true,
-                        keyboard: false,
-                        backdrop: 'static'
-                    });*/
                     return false;
                 }
             });
@@ -1707,11 +1701,32 @@ function getConsultorio() {
         success: function(data) {
             $('#formulario_atenciones #servicio_id').html("");
             $('#formulario_atenciones #servicio_id').html(data);
-            $('#formulario_atenciones #servicio_id').selectpicker('refresh');
+            $('#formulario_atenciones #servicio_id').selectpicker('refresh');          
         }
     });
     return false;
 }
+
+function getConsultorioReceta() {
+    var url = '<?php echo SERVERURL; ?>php/citas/getServicioFacturas.php';
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        success: function(data) {
+            $('#form_receta #servicio_id_receta').html("");
+            $('#form_receta #servicio_id_receta').html(data);
+            $('#form_receta #servicio_id_receta').selectpicker('refresh');            
+        }
+    });
+    return false;
+}
+
+$('#form_receta #servicio_id_receta').on('change', function() {
+    var servicio_id_receta = $('#form_receta #servicio_id_receta').val();
+    
+    $('#form_receta #receta_servicioId').val(servicio_id_receta);
+});
 
 function convertDate(inputFormat) {
     function pad(s) {
@@ -1919,14 +1934,17 @@ function mostrarRecetaMedica(pacientes_id, colaboradorId, servicioId, colaborado
         $('#form_receta #receta_colaboradorId').val(colaboradorId);
         $('#form_receta #receta_servicioId').val(servicioId);
         $('#form_receta #receta_pacienteNombre').val(pacienteNombre);
-            
+
+        $('#form_receta #datos_paciente').show();
         $('#form_receta #datos_paciente').html("<b>Paciente:</b> " + pacienteNombre + " <b>Medico Tratante:</b> " + colaboradorNombre);
 
+        $('#form_receta #receta_datos_generales').hide();
         $('#form_receta #grupo_paciente_receta').hide();
     } else {
         // Si pacientes_id está vacío, mostrar el select
         $('#form_receta #receta_pacientes_id').val('');
         $('#form_receta #grupo_paciente_receta').show();
+        $('#form_receta #datos_paciente').hide();
     }
 
     // Limpiar todas las filas de la tabla
@@ -1936,7 +1954,7 @@ function mostrarRecetaMedica(pacientes_id, colaboradorId, servicioId, colaborado
     agregarFila();
 
     // Log para depuración
-    console.log("Paciente ID: " + (pacientes_id || "Seleccionar desde el select"));
+    console.log("Paciente ID: " + (pacientes_id || "Seleccionar desde el select"));   
 }
 
 function actualizarBreadcrumb(texto) {
@@ -2351,6 +2369,7 @@ $('.selectpicker.producto').selectpicker();
 obtenerProductos($('.selectpicker.producto'));
 
 getPacientes();
+getConsultorioReceta();
 
 // Evento para agregar fila
 $('#agregarFila').on('click', () => {
@@ -2462,17 +2481,37 @@ function registarReceta() {
 // Guardar receta con AJAX
 $('#form_receta').on('submit', (e) => {
     e.preventDefault();
+    var pacienteNombre = $("#form_receta #receta_pacienteNombre").val();
+    var pacienteId = $("#receta_select_pacientes_id").val();
+    var servicioId = $("#servicio_id_receta").val();
+
+        // Validar si los campos no están ocultos y están vacíos
+    if (!$('#receta_select_pacientes_id').is(':hidden') && !pacienteId) {
+        swal("Error", "Debes seleccionar un paciente.", "error");
+        return;
+    }
+
+    if (!$('#servicio_id_receta').is(':hidden') && !servicioId) {
+        swal("Error", "Debes seleccionar un servicio.", "error");
+        return;
+    }
+
+
+    // Si está vacío, tomar el texto del select
+    if (!pacienteNombre) {
+        pacienteNombre = $("#receta_select_pacientes_id option:selected").text();
+    }
+
 	swal({
 		title: "¿Estás seguro?",
-		text: "¿Desea registrar la receta para el paciente: " + $("#form_receta #receta_pacienteNombre").val() + "?",
+		text: "¿Desea registrar la receta para el paciente: " + pacienteNombre + "?",
 		icon: "info",
 		buttons: {
 			cancel: {
 				text: "Cancelar",
 				value: false,
 				visible: true,
-				className: "btn-danger",
-				closeModal: true,
+				className: "btn-info",
 			},
 			confirm: {
 				text: "¡Sí, registrar la receta!",
@@ -2482,7 +2521,6 @@ $('#form_receta').on('submit', (e) => {
 				closeModal: false // Evita el cierre automático hasta completar la acción
 			}
 		},
-        dangerMode: true,
         closeOnEsc: false, // Desactiva el cierre con la tecla Esc
         closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera         
 	}).then((willRegister) => {
@@ -2497,7 +2535,7 @@ function getRecetaReporte(receta_id) {
     var params = {
         "id": receta_id,
         "type": "Receta",
-        "db": "esmultiservicios_centrointegral_cami"
+        "db": <?php echo DB; ?>
     };
 
     viewReport(params);	

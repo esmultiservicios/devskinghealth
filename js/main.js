@@ -427,11 +427,9 @@ function llenarTabla(dato) {
 	if (dato == "Facturacion") {
 		pagination(1);
 		$('#formulario_facturacion')[0].reset();
-		getTotalFacturasDisponibles();
 		getPacientesFacturacion();
 		getColaboradoresFacturacion();
 		getServiciosFacturacion();
-		funciones();
 		limpiarTabla();
 		cleanFooterValueBill();
 		volver();
@@ -442,11 +440,9 @@ function llenarTabla(dato) {
 	if (dato == "GuardarFactura") {
 		pagination(1);
 		$('#formulario_facturacion')[0].reset();
-		getTotalFacturasDisponibles();
 		getPacientesFacturacion();
 		getColaboradoresFacturacion();
 		getServiciosFacturacion();
-		funciones();
 		limpiarTabla();
 		cleanFooterValueBill();
 		volver();
@@ -457,11 +453,9 @@ function llenarTabla(dato) {
 	if (dato == "FacturaAtenciones") {
 		pagination(1);
 		$('#formulario_facturacion')[0].reset();
-		getTotalFacturasDisponibles();
 		getPacientesFacturacion();
 		getColaboradoresFacturacion();
 		getServiciosFacturacion();
-		funciones();
 		limpiarTabla();
 		cleanFooterValueBill();
 		volver();
