@@ -230,25 +230,25 @@ var listar_reporte_facturacion = function(){
 		},		
 		"columns":[
 			{
-				"data": "fecha",
+				"data": "Fecha",
 				"render": function(data, type, row) {
 					return '<a href="#" class="showInvoiceDetail">' + data + '</a>';
 				}
 			},			
 			{
-				"data": "tipo_documento",
+				"data": "Tipo",
 				"render": function(data, type, row) {
 					var color = data === 'Contado' ? '#FFA500' : '#9b59b6'; // Naranja para "Contado" y morado para "Crédito"
 					return '<span class="tipo-documento" style="border: 2px solid ' + color + '; border-radius: 12px; padding: 5px 10px; color: ' + color + ';">' + data + '</span>';
 				}
 			},
-			{"data": "identidad"},			
-			{"data": "paciente"},	
-			{"data": "factura"},
-			{"data": "precio"},
-			{"data": "isv_neto"},	
-			{"data": "descuento"},
-			{"data": "total"},
+			{"data": "Identidad"},			
+			{"data": "Paciente"},	
+			{"data": "Factura"},
+			{"data": "Importe"},
+			{"data": "ISV"},	
+			{"data": "Descuento"},
+			{"data": "Neto"},
 			{"data": "origen"}
 		],	
 		"footerCallback": function(row, data, start, end, display) {
@@ -380,18 +380,14 @@ var delete_bill_dataTable = function(tbody, table){
 function reporteFacturacion() {
     var fechai = $('#form_main_facturacion_reportes #fecha_b').val();
     var fechaf = $('#form_main_facturacion_reportes #fecha_f').val();  
-    var clientes = $('#form_main_facturacion_reportes #clientes').val();
-    var profesional = $('#form_main_facturacion_reportes #profesional').val();
     var estado = $('#form_main_facturacion_reportes #estado').val() || 1;
 
     // Añadir los parámetros al formulario
     var params = {
         "estado": estado,
-        "type": "Reporte_facturas_cami",
+        "type": "Reporte_facturas_skin_cami",
         "fechai": fechai,
         "fechaf": fechaf,
-        "clientes": clientes,
-        "profesional": profesional,
         "db": "<?php echo DB; ?>"
     };
 
