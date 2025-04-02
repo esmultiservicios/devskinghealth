@@ -284,9 +284,14 @@ function mailBill(facturas_id) {
 
 //INICIO IMPRIMIR FACTURACION
 function printBill(facturas_id) {
-    var type = 'Factura_media'; 
-    var url = '<?php echo SERVERURLWINDOWS; ?>?id=' + facturas_id + '&type=' + type;
-    window.open(url, '_blank');    
+    // Añadir los parámetros al formulario
+    var params = {
+        "id": facturas_id,
+        "type": "Factura_media_cami",
+        "db": "<?php echo DB; ?>"
+    };
+
+    viewReport(params);	 
 }
 //FIN IMPRIMIR FACTURACION
 
