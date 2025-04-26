@@ -294,7 +294,7 @@ function modal_rollback(facturas_id, pacientes_id){
 				swal("¡Necesita escribir algo!", { icon: "error" });
 				return false;
 			}
-			erollback(facturas_id, value);
+			rollback(facturas_id, value);
 		});
 	}else{
 		swal({
