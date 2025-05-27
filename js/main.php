@@ -868,7 +868,7 @@ function printBill(facturas_id) {
     // Añadir los parámetros al formulario
     var params = {
         "id": facturas_id,
-        "type": "Factura_media_cami",
+        "type": "Factura_ticket_cami",
         "db": "<?php echo DB; ?>"
     };
 
