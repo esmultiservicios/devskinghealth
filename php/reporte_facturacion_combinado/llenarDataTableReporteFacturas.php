@@ -33,7 +33,7 @@ SELECT
     f.number AS 'numero', 
     CONCAT(sc.prefijo, LPAD(f.number, sc.relleno, '0')) AS 'Factura',
     s.nombre AS 'Servicio', 
-    CONCAT(c.nombre, ' ', c.apellido) AS 'Profesional', 
+    c.nombre AS 'Profesional', 
     sc.relleno AS 'relleno', 
     DATE_FORMAT(f.fecha, '%d/%m/%Y') AS 'fecha1', 
     f.pacientes_id AS 'pacientes_id', 
