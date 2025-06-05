@@ -70,7 +70,7 @@ SELECT
         FROM facturas_detalle AS fd
         WHERE fd.facturas_id = f.facturas_id
     ) AS 'Importe',
-    'CAMII' AS 'origen',
+    'CAMI' AS 'origen',
     e.nombre AS 'Empresa', 
     e.rtn AS 'Empresa_rtn', 
     e.ubicacion AS 'Empresa_ubicacion',
