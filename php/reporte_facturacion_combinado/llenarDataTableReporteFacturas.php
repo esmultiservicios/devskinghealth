@@ -94,7 +94,7 @@ SELECT
     f.number AS 'numero', 
     CONCAT(sf.prefijo, LPAD(f.number, sf.relleno, '0')) AS 'Factura',
     '' AS 'servicio', 
-    CONCAT(co.nombre, ' ', co.apellido) AS 'Profesional', 
+    co.nombre AS 'Profesional', 
     sf.relleno AS 'relleno', 
     DATE_FORMAT(f.fecha, '%d/%m/%Y') AS 'fecha1', 
     '' AS 'pacientes_id', 
