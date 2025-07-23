@@ -64,6 +64,46 @@ class mainModel
 	}
 }
 
+/**
+ * Conecta a MySQL y selecciona la base de datos especificada
+ * @param string $DB Nombre de la base de datos a conectar
+ * @return mysqli Objeto de conexión MySQLi
+ * @throws Exception Si la conexión o selección de BD falla
+ */
+function connect_mysqli_db($DB)
+{
+	// 1. Validar que las constantes necesarias estén definidas
+	if (!defined('SERVER') || !defined('USER') || !defined('PASS')) {
+		throw new Exception('Las constantes de conexión (SERVER, USER, PASS) no están definidas');
+	}
+
+	// 2. Establecer conexión (sin persistente)
+	$mysqli = new mysqli(SERVER, USER, PASS);
+	
+	// 3. Verificar errores de conexión
+	if ($mysqli->connect_errno) {
+		throw new Exception('Error al conectar a MySQL: ' . $mysqli->connect_error);
+	}
+
+	// 4. Configurar charset (utf8mb4 para soporte completo)
+	if (!$mysqli->set_charset('utf8mb4')) {
+		throw new Exception('Error al configurar charset: ' . $mysqli->error);
+	}
+
+	// 5. Seleccionar la base de datos
+	if (!$mysqli->select_db($DB)) {
+		// Intento alternativo usando $GLOBALS['db'] si está definido
+		$fallbackDB = isset($GLOBALS['db']) ? $GLOBALS['db'] : $DB;
+		
+		if (!$mysqli->select_db($fallbackDB)) {
+			throw new Exception('Error al seleccionar la base de datos: ' . $mysqli->error . 
+							'. Intentó con: ' . $DB . ' y ' . $fallbackDB);
+		}
+	}
+
+	return $mysqli;
+}
+
 function dia_nombre($fecha){
    $dia_nombre = '';
    switch (date('w', strtotime($fecha))){ 
