@@ -104,6 +104,24 @@ function connect_mysqli_db($DB)
 	return $mysqli;
 }
 
+function correlativodbMain($campo_id, $tabla, $db)
+{
+	$mysqli = connect_mysqli_db($db);
+	$correlativo = 'SELECT MAX(' . $campo_id . ') AS max, COUNT(' . $campo_id . ') AS count FROM ' . $tabla;
+
+	$result = $mysqli->query($correlativo);
+	$correlativo2 = $result->fetch_assoc();
+	$numero = $correlativo2['max'];
+	$cantidad = $correlativo2['count'];
+
+	if ($cantidad == 0)
+		$numero = 1;
+	else
+		$numero = $numero + 1;
+
+	return $numero;
+}
+
 function dia_nombre($fecha){
    $dia_nombre = '';
    switch (date('w', strtotime($fecha))){ 
