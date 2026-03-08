@@ -1,22 +1,41 @@
 <div class="table-responsive" id="facturacion" style="display: none;">
     <form class="invoice-form FormularioAjax" id="formulario_facturacion" action="" method="POST" data-form=""
         enctype="multipart/form-data">
+
         <div class="form-group row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <button class="btn btn-primary" type="submit" id="validar" data-toggle="tooltip" data-placement="top"
-                    title="Cobrar la Factura">
-                    <div class="sb-nav-link-icon"></div><i class="far fa-save fa-lg"></i> Cobrar
-                </button>
-                <button class="btn btn-secondary" type="submit" id="guardar" data-toggle="tooltip" data-placement="top"
-                    title="Guardar la Factura">
-                    <div class="sb-nav-link-icon"></div><i class="far fa-save fa-lg"></i> Guardar
-                </button>
-                <button class="btn btn-secondary" type="submit" id="guardar1" data-toggle="tooltip" data-placement="top"
-                    title="Guardar la Factura">
-                    <div class="sb-nav-link-icon"></div><i class="far fa-save fa-lg"></i> Guardar
-                </button>
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 d-flex align-items-center">
+                <div class="button-group mr-3">
+                    <button class="btn btn-primary" type="submit" id="validar" data-toggle="tooltip" data-placement="top" title="Registrar la Factura">
+                        <div class="sb-nav-link-icon"></div><i class="far fa-save fa-lg"></i> Guardar
+                    </button>
+                    <button class="btn btn-primary" type="submit" id="cobrar" data-toggle="tooltip" data-placement="top" title="Cobrar la Factura">
+                        <div class="sb-nav-link-icon"></div><i class="far fa-save fa-lg"></i> Cobrar
+                    </button>
+                </div>
+                
+                <!-- Contador de facturas - Usa ml-auto para alinear a la derecha -->
+                <div id="facturas-counter" class="counter-container counter-normal ml-auto">
+                    <div class="counter-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <div class="counter-content">
+                        <div id="counter-header" class="counter-header">
+                            <strong>TOTAL DISPONIBLE AUTORIZADO POR EL SAR</strong>
+                        </div>
+                        <div id="counter-status" class="counter-status status-normal">
+                            0 facturas disponibles
+                        </div>
+                        <div class="counter-number-container">
+                            <span id="counter-number">0</span>
+                        </div>
+                        <div id="counter-footer" class="counter-footer">
+                            <small>Rango autorizado: <span id="rango-inicial">0</span> al <span id="rango-final">0</span></small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+		
         <div class="form-group row">
             <label for="inputCliente" class="col-sm-1 col-form-label-md">Paciente <span
                     class="priority">*<span /></label>
@@ -34,6 +53,7 @@
                     readonly>
             </div>
         </div>
+		
         <div class="form-group row">
             <label for="inputCliente" class="col-sm-1 col-form-label-md">Profesional <span
                     class="priority">*<span /></label>

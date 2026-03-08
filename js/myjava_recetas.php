@@ -401,7 +401,7 @@ var print_recetas_dataTable = function(tbody, table){
 			
 		var params = {
 			"id": data.receta_id,
-			"type": "Receta",
+			"type": "RecetaSkin",
 			"db": "<?php echo DB; ?>"
 		};
 

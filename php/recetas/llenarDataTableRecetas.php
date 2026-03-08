@@ -25,27 +25,40 @@ if ($profesional > 0) {
 $db_main = DBIZZY;
 
 $consulta = "
-SELECT CONCAT(IFNULL(p.nombre, ''), ' ', IFNULL(p.apellido, '')) AS paciente, 
-        r.fecha, 
-        CONCAT(IFNULL(d.nombre, ''), ' ', IFNULL(d.apellido, '')) AS doctor, 
-        rd.productos_id, 
-        rd.cantidad, 
-        rd.descripcion, 
-        prod.nombre AS producto_nombre, 
-        e.rtn AS empresa_rtn, 
-        e.nombre AS empresa, 
-        e.ubicacion AS empresa_ubicacion,
-        r.receta_id,
-        p.identidad,
-        p.pacientes_id,
-        LPAD(r.receta_id, 6, '0') AS receta_numero
+SELECT 
+    CONCAT(IFNULL(p.nombre, ''), ' ', IFNULL(p.apellido, '')) AS paciente, 
+    r.fecha, 
+    CONCAT(IFNULL(d.nombre, ''), ' ', IFNULL(d.apellido, '')) AS doctor, 
+    
+    GROUP_CONCAT(prod.nombre ORDER BY rd.detalle_id SEPARATOR ', ') AS producto_nombre,
+    GROUP_CONCAT(rd.cantidad ORDER BY rd.detalle_id SEPARATOR ', ') AS cantidad,
+    GROUP_CONCAT(rd.descripcion ORDER BY rd.detalle_id SEPARATOR ' | ') AS descripcion,
+    
+    e.rtn AS empresa_rtn, 
+    e.nombre AS empresa, 
+    e.ubicacion AS empresa_ubicacion,
+    r.receta_id,
+    p.identidad,
+    p.pacientes_id,
+    LPAD(r.receta_id, 6, '0') AS receta_numero
 FROM recetas r
 INNER JOIN pacientes p ON r.pacientes_id = p.pacientes_id
 INNER JOIN colaboradores d ON r.colaborador_id = d.colaborador_id
 INNER JOIN receta_detalles rd ON r.receta_id = rd.receta_id
 INNER JOIN $db_main.productos prod ON rd.productos_id = prod.productos_id
 INNER JOIN empresa e ON r.empresa_id = e.empresa_id
-WHERE CAST(r.fecha AS DATE) BETWEEN '$fechai' AND '$fechaf' AND r.estado = '$estado' $busqueda_paciente $profesional_consulta";
+WHERE CAST(r.fecha AS DATE) BETWEEN '$fechai' AND '$fechaf' 
+  AND r.estado = '$estado' 
+  $busqueda_paciente 
+  $profesional_consulta
+GROUP BY 
+    r.receta_id,
+    p.nombre, p.apellido,
+    r.fecha,
+    d.nombre, d.apellido,
+    e.rtn, e.nombre, e.ubicacion,
+    p.identidad, p.pacientes_id
+ORDER BY r.receta_id DESC";
 
 $result = $mysqli->query($consulta) or die($mysqli->error);
 

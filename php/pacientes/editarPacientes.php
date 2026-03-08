@@ -10,8 +10,8 @@ $usuario = $_SESSION['colaborador_id'];
 $estado = 1;  // 1. Activo 2. Inactivo
 $fecha_registro = date('Y-m-d H:i:s');
 
-$nombre = $_POST['name'];
-$apellido = $_POST['lastname'];
+$nombre = cleanString($_POST['name']);
+$apellido = cleanString($_POST['lastname']);
 $sexo = $_POST['sexo'];
 $telefono1 = $_POST['telefono1'];
 $telefono2 = $_POST['telefono2'];
