@@ -1,0 +1,15 @@
+####18/03/2026####
+ALTER TABLE receta_detalles 
+MODIFY productos_id INT NULL;
+
+ALTER TABLE receta_detalles 
+ADD COLUMN tipo_producto ENUM('CATALOGO','MANUAL') NOT NULL DEFAULT 'CATALOGO' AFTER receta_id,
+ADD COLUMN nombre_manual VARCHAR(255) NULL AFTER productos_id;
+
+
+####01/07/2023####
+tabla => movimientos
+se agrego al final los siguientes campos
+comentario		varchar(1000)
+
+
