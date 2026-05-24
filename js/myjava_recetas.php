@@ -354,6 +354,21 @@ var listar_recetas = function () {
 		return limpiarTexto(texto);
 	};
 
+	var mensajeSinResultados = '' +
+		'<div class="text-center py-5">' +
+			'<div class="text-danger font-weight-bold" style="font-size:15px;">' +
+				'<i class="fas fa-search mr-2"></i> No se encontraron resultados' +
+			'</div>' +
+			'<div class="text-muted mt-2" style="font-size:13px;">' +
+				'Intente buscar por receta, identidad, paciente, medicamento o profesional.' +
+			'</div>' +
+		'</div>';
+
+	var idioma_recetas = $.extend(true, {}, idioma_español, {
+		emptyTable: mensajeSinResultados,
+		zeroRecords: mensajeSinResultados
+	});
+
 	var table_reporte_recetas = $("#dataTableRecetasMain").DataTable({
 		"destroy": true,
 		"ajax": {
@@ -521,7 +536,7 @@ var listar_recetas = function () {
 		"lengthMenu": lengthMenu20,
 		"stateSave": true,
 		"bDestroy": true,
-		"language": idioma_español,
+		"language": idioma_recetas,
 		"dom": dom,
 		"order": [[1, "desc"]],
 		"buttons": [
@@ -533,7 +548,10 @@ var listar_recetas = function () {
 					listar_recetas();
 				}
 			}
-		]
+		],
+		"drawCallback": function () {
+			$('#dataTableRecetasMain tbody tr td.dataTables_empty').attr('style', 'padding: 0 !important; background:#f3f3f3;');
+		}
 	});
 
 	table_reporte_recetas.search('').draw();
