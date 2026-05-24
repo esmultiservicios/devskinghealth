@@ -326,71 +326,221 @@ function getProfesionales(){
      });
 }
 
-var listar_recetas = function(){
+var listar_recetas = function () {
 	var fechai = $('#form_main_receta_main #fecha_b').val();
-	var fechaf = $('#form_main_receta_main #fecha_f').val();  
+	var fechaf = $('#form_main_receta_main #fecha_f').val();
 	var clientes = $('#form_main_receta_main #clientes').val() || '';
 	var profesional = $('#form_main_receta_main #profesional').val() || '';
 	var estado = $('#form_main_receta_main #estado').val() || 1;
 
-	var table_reporte_recetas  = $("#dataTableRecetasMain").DataTable({
-		"destroy":true,	
-		"ajax":{
-			"method":"POST",
+	var limpiarTexto = function (texto) {
+		if (texto === null || texto === undefined || texto === '') {
+			return '';
+		}
+
+		return String(texto)
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#039;');
+	};
+
+	var sinDato = function (texto) {
+		if (texto === null || texto === undefined || texto === '') {
+			return '<span class="badge badge-light px-3 py-2" style="border-radius:20px; color:#777; background-color:#f1f1f1;">Sin dato</span>';
+		}
+
+		return limpiarTexto(texto);
+	};
+
+	var table_reporte_recetas = $("#dataTableRecetasMain").DataTable({
+		"destroy": true,
+		"ajax": {
+			"method": "POST",
 			"url": "<?php echo SERVERURL; ?>php/recetas/llenarDataTableRecetas.php",
-            "data": function(d) {
-                d.fechai = fechai;
-                d.fechaf = fechaf;
-                d.clientes = clientes;
-                d.profesional = profesional;			
+			"data": function (d) {
+				d.fechai = fechai;
+				d.fechaf = fechaf;
+				d.clientes = clientes;
+				d.profesional = profesional;
 				d.estado = estado;
-            }	
-		},		
-		"columns":[	
-			{"data": "receta_numero"},
-			{"data": "fecha"},				
-			{"data": "identidad"},			
-			{"data": "paciente"},	
-			{"data": "receta_id"},
-			{"data": "producto_nombre"},
-			{"data": "cantidad"},	
-			{"data": "descripcion"},
-			{"data": "descripcion"},								
+			}
+		},
+		"columns": [
+			{
+				"data": "receta_numero",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					return '' +
+						'<span class="badge px-3 py-2" style="font-size:13px; border-radius:8px; color:#005f8f; background:#f5fbff; border:1px solid #b8dfff;">' +
+							'<i class="fas fa-prescription-bottle-alt mr-1"></i> ' + sinDato(data) +
+						'</span>';
+				}
+			},
+			{
+				"data": "fecha",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					return '' +
+						'<span class="badge badge-light border px-3 py-2" style="font-size:13px; border-radius:8px;">' +
+							'<i class="fas fa-calendar-alt text-primary mr-1"></i> ' + sinDato(data) +
+						'</span>';
+				}
+			},
+			{
+				"data": "identidad",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					if (data === null || data === undefined || data === '') {
+						return '<span class="badge badge-light px-3 py-2" style="border-radius:20px; color:#777; background-color:#f1f1f1;">Sin identidad</span>';
+					}
+
+					return '' +
+						'<span class="badge badge-light border px-3 py-2" style="font-size:13px; border-radius:8px;">' +
+							'<i class="fas fa-id-card text-muted mr-1"></i> ' + limpiarTexto(data) +
+						'</span>';
+				}
+			},
+			{
+				"data": "paciente",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					return '' +
+						'<div style="line-height:1.35;">' +
+							'<div class="font-weight-bold text-dark">' +
+								'<i class="fas fa-user text-info mr-1"></i> ' + sinDato(data) +
+							'</div>' +
+						'</div>';
+				}
+			},
+			{
+				"data": "receta_id",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					return '' +
+						'<span class="badge px-3 py-2" style="font-size:13px; border-radius:20px; color:#8a5a00; background:#fff8e5; border:1px solid #f0ad4e;">' +
+							'<i class="fas fa-hashtag mr-1"></i> ' + sinDato(data) +
+						'</span>';
+				}
+			},
+			{
+				"data": "producto_nombre",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					return '' +
+						'<div style="line-height:1.35;">' +
+							'<div class="font-weight-bold text-dark">' +
+								'<i class="fas fa-pills text-success mr-1"></i> ' + sinDato(data) +
+							'</div>' +
+						'</div>';
+				}
+			},
+			{
+				"data": "cantidad",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					return '' +
+						'<span class="badge px-3 py-2" style="font-size:13px; border-radius:20px; color:#0b7a32; background:#ecfff4; border:1px solid #b9ebcc;">' +
+							'<i class="fas fa-capsules mr-1"></i> ' + sinDato(data) +
+						'</span>';
+				}
+			},
+			{
+				"data": "descripcion",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					if (data === null || data === undefined || data === '') {
+						return '<span class="badge badge-light px-3 py-2" style="border-radius:20px; color:#777; background-color:#f1f1f1;">Sin indicación</span>';
+					}
+
+					return '' +
+						'<span class="text-dark">' +
+							'<i class="fas fa-notes-medical text-primary mr-1"></i> ' + limpiarTexto(data) +
+						'</span>';
+				}
+			},
+			{
+				"data": "descripcion",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					if (data === null || data === undefined || data === '') {
+						return '<span class="badge badge-light px-3 py-2" style="border-radius:20px; color:#777; background-color:#f1f1f1;">Sin detalle</span>';
+					}
+
+					return '' +
+						'<span class="badge badge-light border px-3 py-2" style="font-size:13px; border-radius:8px;">' +
+							'<i class="fas fa-clipboard-list text-secondary mr-1"></i> Ver detalle' +
+						'</span>';
+				}
+			},
 			{
 				"data": null,
-				"defaultContent": 
+				"orderable": false,
+				"searchable": false,
+				"defaultContent":
 					'<div class="btn-group">' +
-						'<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
-							'<i class="fas fa-cog"></i>' +
+						'<button type="button" class="btn btn-primary dropdown-toggle shadow-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius:6px; padding:7px 14px; font-size:13px;">' +
+							'<i class="fas fa-cog mr-1"></i> Acciones' +
 						'</button>' +
-						'<div class="dropdown-menu">' +
-							'<a class="dropdown-item printReceta" href="#"><i class="fas fa-print fa-lg"></i> Imprimir</a>' +
-							'<a class="dropdown-item deleteReceta" href="#"><i class="fa-solid fa-ban fa-lg"></i> Anular</a>' +
+						'<div class="dropdown-menu dropdown-menu-right shadow border-0" style="border-radius:8px;">' +
+							'<a class="dropdown-item printReceta" href="#"><i class="fas fa-print text-info mr-2"></i> Imprimir</a>' +
+							'<div class="dropdown-divider"></div>' +
+							'<a class="dropdown-item deleteReceta text-danger" href="#"><i class="fas fa-ban mr-2"></i> Anular</a>' +
 						'</div>' +
 					'</div>'
 			}
 		],
 		"lengthMenu": lengthMenu20,
 		"stateSave": true,
-		"bDestroy": true,		
-		"language": idioma_español,//esta se encuenta en el archivo main.js
-		"dom": dom,			
-		"buttons":[		
+		"bDestroy": true,
+		"language": idioma_español,
+		"dom": dom,
+		"order": [[1, "desc"]],
+		"buttons": [
 			{
-				text:      '<i class="fas fa-sync-alt fa-lg"></i> Actualizar',
+				text: '<i class="fas fa-sync-alt fa-lg"></i> Actualizar',
 				titleAttr: 'Actualizar Recetas',
 				className: 'btn btn-info',
-				action: 	function(){
+				action: function () {
 					listar_recetas();
 				}
-			}			
-		]		
-	});	 
+			}
+		]
+	});
+
 	table_reporte_recetas.search('').draw();
 	$('#buscar').focus();
-	
+
 	print_recetas_dataTable("#dataTableRecetasMain tbody", table_reporte_recetas);
-	delete_recetas_dataTable("#dataTableRecetasMain tbody", table_reporte_recetas);	
+	delete_recetas_dataTable("#dataTableRecetasMain tbody", table_reporte_recetas);
 }
 
 var print_recetas_dataTable = function(tbody, table){

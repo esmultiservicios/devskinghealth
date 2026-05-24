@@ -2213,6 +2213,174 @@ function pagination(partida) {
     var dato = $('#form_main #bs_regis').val() || '';
     var estado = $('#form_main #estado').val() || 0;
 
+    function limpiarTexto(texto) {
+        if (texto === null || texto === undefined || texto === '') {
+            return '';
+        }
+
+        return String(texto)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function limpiarJS(texto) {
+        if (texto === null || texto === undefined) {
+            return '';
+        }
+
+        return String(texto)
+            .replace(/\\/g, '\\\\')
+            .replace(/'/g, "\\'")
+            .replace(/"/g, '\\"')
+            .replace(/\r/g, '')
+            .replace(/\n/g, ' ');
+    }
+
+    function sinDato(texto) {
+        return '<span class="badge px-3 py-2" style="border-radius:20px; color:#777; background:#f1f1f1; font-size:12px;">' +
+            limpiarTexto(texto) +
+        '</span>';
+    }
+
+    function identidadUI(valor) {
+        if (!valor) {
+            return sinDato('Sin identidad');
+        }
+
+        return '<span class="badge badge-light border px-3 py-2" style="font-size:13px; border-radius:8px;">' +
+            '<i class="fas fa-id-card text-muted mr-1"></i> ' + limpiarTexto(valor) +
+        '</span>';
+    }
+
+    function pacienteUI(valor) {
+        if (!valor) {
+            return sinDato('Sin paciente');
+        }
+
+        return '<div style="line-height:1.35;">' +
+            '<div class="font-weight-bold text-dark">' +
+                '<i class="fas fa-user text-info mr-1"></i> ' + limpiarTexto(valor) +
+            '</div>' +
+        '</div>';
+    }
+
+    function fechaUI(valor) {
+        if (!valor) {
+            return sinDato('Sin fecha');
+        }
+
+        return '<span class="badge badge-light border px-3 py-2" style="font-size:13px; border-radius:8px;">' +
+            '<i class="fas fa-calendar-alt text-primary mr-1"></i> ' + limpiarTexto(valor) +
+        '</span>';
+    }
+
+    function formatearHora(hora) {
+        if (!hora) {
+            return '';
+        }
+
+        hora = String(hora).trim();
+
+        if (hora.toUpperCase().indexOf('AM') >= 0 || hora.toUpperCase().indexOf('PM') >= 0) {
+            return hora;
+        }
+
+        var partes = hora.split(':');
+
+        if (partes.length >= 2) {
+            var h = parseInt(partes[0], 10);
+            var m = partes[1];
+            var periodo = h >= 12 ? 'PM' : 'AM';
+
+            if (h === 0) {
+                h = 12;
+            } else if (h > 12) {
+                h = h - 12;
+            }
+
+            return String(h).padStart(2, '0') + ':' + m + ' ' + periodo;
+        }
+
+        return hora;
+    }
+
+    function horaUI(valor) {
+        if (!valor) {
+            return sinDato('Sin hora');
+        }
+
+        return '<span class="badge px-3 py-2" style="font-size:13px; border-radius:20px; color:#8a5a00; background:#fff8e5; border:1px solid #f0ad4e;">' +
+            '<i class="fas fa-clock mr-1"></i> ' + limpiarTexto(formatearHora(valor)) +
+        '</span>';
+    }
+
+    function tipoPacienteUI(valor) {
+        if (!valor) {
+            return sinDato('Sin tipo');
+        }
+
+        return '<span class="badge px-3 py-2" style="font-size:13px; border-radius:20px; color:#005f73; background:#e9fbff; border:1px solid #9de2ef;">' +
+            '<i class="fas fa-user-tag mr-1"></i> ' + limpiarTexto(valor) +
+        '</span>';
+    }
+
+    function servicioUI(valor) {
+        if (!valor) {
+            return sinDato('Sin servicio');
+        }
+
+        return '<span class="text-dark">' +
+            '<i class="fas fa-clinic-medical text-info mr-1"></i> ' + limpiarTexto(valor) +
+        '</span>';
+    }
+
+    function telefonoUI(valor) {
+        if (!valor) {
+            return sinDato('Sin teléfono');
+        }
+
+        return '<a style="text-decoration:none;" title="Teléfono Usuario" href="tel:9' + limpiarTexto(valor) + '">' +
+            '<span class="badge px-3 py-2" style="font-size:13px; border-radius:20px; color:#088143; background:#ecfff4; border:1px solid #b9ebcc;">' +
+                '<i class="fas fa-phone mr-1"></i> ' + limpiarTexto(valor) +
+            '</span>' +
+        '</a>';
+    }
+
+    function observacionUI(valor) {
+        if (!valor) {
+            return sinDato('Sin observación');
+        }
+
+        return '<span class="text-dark">' +
+            '<i class="fas fa-notes-medical text-primary mr-1"></i> ' + limpiarTexto(valor) +
+        '</span>';
+    }
+
+    function comentarioUI(valor) {
+        if (!valor) {
+            return sinDato('Sin comentario');
+        }
+
+        return '<span class="text-dark">' +
+            '<i class="fas fa-comment-medical text-secondary mr-1"></i> ' + limpiarTexto(valor) +
+        '</span>';
+    }
+
+    function estadoUI(valor) {
+        if (valor === 'Atendido') {
+            return '<span class="badge px-3 py-2" style="font-size:13px; border-radius:20px; color:#0b7a32; background:#ecfff4; border:1px solid #b9ebcc;">' +
+                '<i class="fas fa-check-circle mr-1"></i> Atendido' +
+            '</span>';
+        }
+
+        return '<span class="badge px-3 py-2" style="font-size:13px; border-radius:20px; color:#8a5a00; background:#fff8e5; border:1px solid #f0ad4e;">' +
+            '<i class="fas fa-clock mr-1"></i> Pendiente' +
+        '</span>';
+    }
+
     $.ajax({
         type: 'POST',
         url: url,
@@ -2225,54 +2393,135 @@ function pagination(partida) {
         },
         dataType: 'json',
         success: function(response) {
-            var registros = response.registros;
-            var pagination = response.pagination;
-            var total = response.total;
+            var registros = response.registros || [];
+            var pagination = response.pagination || '';
+            var total = response.total || 0;
 
-            var tabla = '<table class="table table-striped table-condensed table-hover">' +
-                '<tr>' +
-                '<th>No.</th>' +
-                '<th>Identidad</th>' +
-                '<th>Nombre</th>' +
-                '<th>Fecha</th>' +
-                '<th>Hora</th>' +
-                '<th>Paciente</th>' +
-                '<th>Servicio</th>' +
-                '<th>Teléfono</th>' +
-                '<th>Observación</th>' +
-                '<th>Comentario</th>' +
-                '<th>Estado</th>' +
-                '<th>Receta</th>' +
-                '<th>Registrar</th>' +
-                '<th>Ausencia</th>' +
-                '</tr>';
+            var tabla = '' +
+                '<div class="table-responsive">' +
+                    '<table class="table table-striped table-hover mb-0" style="font-size:13px;">' +
+                        '<thead>' +
+                            '<tr style="background:#1297a5; color:#fff;">' +
+                                '<th class="text-center align-middle py-3" width="4%">No.</th>' +
+                                '<th class="text-center align-middle py-3" width="10%">Identidad</th>' +
+                                '<th class="align-middle py-3" width="15%">Nombre</th>' +
+                                '<th class="text-center align-middle py-3" width="8%">Fecha</th>' +
+                                '<th class="text-center align-middle py-3" width="7%">Hora</th>' +
+                                '<th class="text-center align-middle py-3" width="7%">Paciente</th>' +
+                                '<th class="align-middle py-3" width="9%">Servicio</th>' +
+                                '<th class="text-center align-middle py-3" width="9%">Teléfono</th>' +
+                                '<th class="align-middle py-3" width="10%">Observación</th>' +
+                                '<th class="align-middle py-3" width="10%">Comentario</th>' +
+                                '<th class="text-center align-middle py-3" width="8%">Estado</th>' +
+                                '<th class="text-center align-middle py-3" width="8%">Receta</th>' +
+                                '<th class="text-center align-middle py-3" width="8%">Registrar</th>' +
+                                '<th class="text-center align-middle py-3" width="8%">Ausencia</th>' +
+                            '</tr>' +
+                        '</thead>' +
+                        '<tbody>';
 
             if (registros.length > 0) {
                 registros.forEach(function(registro, index) {
-                    var telefonousuario = '<a style="text-decoration:none" title="Teléfono Usuario" href="tel:9' + registro.telefono + '">' + registro.telefono + '</a>';
-                    tabla += '<tr>' +
-                        '<td>' + (index + 1) + '</td>' +
-                        '<td>' + registro.identidad + '</td>' +
-                        '<td>' + registro.paciente + '</td>' +
-                        '<td>' + registro.fecha_cita + '</td>' +
-                        '<td>' + new Date('1970-01-01T' + registro.hora + 'Z').toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) + '</td>' +
-                        '<td>' + registro.tipo_paciente + '</td>' +
-                        '<td>' + registro.servicio + '</td>' +
-                        '<td>' + telefonousuario + '</td>' +
-                        '<td>' + registro.observacion + '</td>' +
-                        '<td>' + registro.comentario + '</td>' +
-                        '<td>' + registro.estatus + '</td>' +
-                        '<td><a class="btn btn-secondary ml-2" title="Receta Médica" href="javascript:mostrarRecetaMedica(' + registro.pacientes_id + ', ' + registro.colaborador_id + ', ' + registro.servicio_id + ', \'' + registro.colaborador + '\', \'' + registro.paciente + '\');"><i class="fas fa-prescription-bottle-alt fa-lg"></i> Receta</a></td>' +
-                        '<td><a class="btn btn-secondary ml-2" title="Agregar Atención a Paciente" href="javascript:editarRegistro(' + registro.pacientes_id + ',' + registro.agenda_id + ');"><i class="fas fa-book-medical fa-lg"></i> Atención</a></td>' +
-                        '<td><a class="btn btn-secondary ml-2" title="Marcar Ausencia" href="javascript:nosePresentoRegistro(' + registro.pacientes_id + ',' + registro.agenda_id + ',' + registro.fecha + ');"><i class="fas fa-times-circle fa-lg"></i> Ausencia</a></td>' +
+                    tabla += '' +
+                        '<tr style="height:58px;">' +
+                            '<td class="text-center align-middle font-weight-bold py-3">' + (index + 1) + '</td>' +
+
+                            '<td class="text-center align-middle py-3">' +
+                                identidadUI(registro.identidad) +
+                            '</td>' +
+
+                            '<td class="align-middle py-3">' +
+                                pacienteUI(registro.paciente) +
+                            '</td>' +
+
+                            '<td class="text-center align-middle py-3">' +
+                                fechaUI(registro.fecha_cita) +
+                            '</td>' +
+
+                            '<td class="text-center align-middle py-3">' +
+                                horaUI(registro.hora) +
+                            '</td>' +
+
+                            '<td class="text-center align-middle py-3">' +
+                                tipoPacienteUI(registro.tipo_paciente) +
+                            '</td>' +
+
+                            '<td class="align-middle py-3">' +
+                                servicioUI(registro.servicio) +
+                            '</td>' +
+
+                            '<td class="text-center align-middle py-3">' +
+                                telefonoUI(registro.telefono) +
+                            '</td>' +
+
+                            '<td class="align-middle py-3">' +
+                                observacionUI(registro.observacion) +
+                            '</td>' +
+
+                            '<td class="align-middle py-3">' +
+                                comentarioUI(registro.comentario) +
+                            '</td>' +
+
+                            '<td class="text-center align-middle py-3">' +
+                                estadoUI(registro.estatus) +
+                            '</td>' +
+
+                            '<td class="text-center align-middle py-3">' +
+                                '<a class="btn btn-secondary shadow-sm d-inline-flex align-items-center justify-content-center" ' +
+                                   'style="border-radius:6px; padding:8px 14px; font-size:13px; min-width:95px; white-space:nowrap;" ' +
+                                   'title="Receta Médica" ' +
+                                   'href="javascript:mostrarRecetaMedica(' + registro.pacientes_id + ', ' + registro.colaborador_id + ', ' + registro.servicio_id + ', \'' + limpiarJS(registro.colaborador) + '\', \'' + limpiarJS(registro.paciente) + '\');void(0);">' +
+                                    '<i class="fas fa-prescription-bottle-alt mr-2"></i> Receta' +
+                                '</a>' +
+                            '</td>' +
+
+                            '<td class="text-center align-middle py-3">' +
+                                '<a class="btn btn-primary shadow-sm d-inline-flex align-items-center justify-content-center" ' +
+                                   'style="border-radius:6px; padding:8px 14px; font-size:13px; min-width:105px; white-space:nowrap;" ' +
+                                   'title="Agregar Atención a Paciente" ' +
+                                   'href="javascript:editarRegistro(' + registro.pacientes_id + ',' + registro.agenda_id + ');void(0);">' +
+                                    '<i class="fas fa-book-medical mr-2"></i> Atención' +
+                                '</a>' +
+                            '</td>' +
+
+                            '<td class="text-center align-middle py-3">' +
+                                '<a class="btn btn-danger shadow-sm d-inline-flex align-items-center justify-content-center" ' +
+                                   'style="border-radius:6px; padding:8px 14px; font-size:13px; min-width:105px; white-space:nowrap;" ' +
+                                   'title="Marcar Ausencia" ' +
+                                   'href="javascript:nosePresentoRegistro(' + registro.pacientes_id + ',' + registro.agenda_id + ',' + registro.fecha + ');void(0);">' +
+                                    '<i class="fas fa-times-circle mr-2"></i> Ausencia' +
+                                '</a>' +
+                            '</td>' +
                         '</tr>';
                 });
-                tabla += '<tr><td colspan="14"><b><p align="center">Total de Registros Encontrados: ' + total + '</p></b></td></tr>';
+
+                tabla += '' +
+                    '<tr>' +
+                        '<td colspan="14" class="text-center py-4">' +
+                            '<span class="badge badge-light border px-4 py-2" style="font-size:14px; border-radius:20px;">' +
+                                '<i class="fas fa-clipboard-check text-info mr-1"></i> ' +
+                                'Total de Registros Encontrados: <strong>' + total + '</strong>' +
+                            '</span>' +
+                        '</td>' +
+                    '</tr>';
             } else {
-                tabla += '<tr><td colspan="14" style="color:#C7030D">No se encontraron resultados</td></tr>';
+                tabla += '' +
+                    '<tr>' +
+                        '<td colspan="14" class="text-center py-5">' +
+                            '<div class="text-danger font-weight-bold" style="font-size:15px;">' +
+                                '<i class="fas fa-search mr-2"></i> No se encontraron resultados' +
+                            '</div>' +
+                            '<div class="text-muted mt-1">' +
+                                'Intente buscar por expediente, nombre o identidad.' +
+                            '</div>' +
+                        '</td>' +
+                    '</tr>';
             }
 
-            tabla += '</table>';
+            tabla += '' +
+                        '</tbody>' +
+                    '</table>' +
+                '</div>';
 
             $('#agrega-registros').html(tabla);
             $('#pagination').html(pagination);
@@ -2285,11 +2534,12 @@ function pagination(partida) {
                 button: "Aceptar",
                 type: "error",
                 dangerMode: true,
-                closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-                closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera 
+                closeOnEsc: false,
+                closeOnClickOutside: false
             });
         }
     });
+
     return false;
 }
 //FIN PAGINACION DE REGISTROS

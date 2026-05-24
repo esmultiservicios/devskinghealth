@@ -469,149 +469,296 @@ function getProfesionales(){
      });
 }
 
-var listar_reporte_facturacion = function(){
+var listar_reporte_facturacion = function () {
 	var fechai = $('#form_main_facturacion_reportes #fecha_b').val();
-	var fechaf = $('#form_main_facturacion_reportes #fecha_f').val();  
+	var fechaf = $('#form_main_facturacion_reportes #fecha_f').val();
 	var clientes = $('#form_main_facturacion_reportes #clientes').val() || '';
 	var profesional = $('#form_main_facturacion_reportes #profesional').val() || '';
 	var estado = $('#form_main_facturacion_reportes #estado').val() || 1;
-	
-	var table_reporte_facturacion  = $("#dataTableReporteFacturacionMain").DataTable({
-		"destroy":true,	
-		"ajax":{
-			"method":"POST",
+
+	var formatMoney = function (valor) {
+		valor = parseFloat(valor) || 0;
+
+		return new Intl.NumberFormat('es-HN', {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2
+		}).format(valor);
+	};
+
+	var limpiarTexto = function (texto) {
+		if (texto === null || texto === undefined) {
+			return '';
+		}
+
+		return String(texto)
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#039;');
+	};
+
+	var table_reporte_facturacion = $("#dataTableReporteFacturacionMain").DataTable({
+		"destroy": true,
+		"ajax": {
+			"method": "POST",
 			"url": "<?php echo SERVERURL; ?>php/reporte_facturacion/llenarDataTableReporteFacturas.php",
-            "data": function(d) {
-                d.fechai = fechai;
-                d.fechaf = fechaf;
-                d.clientes = clientes;
-                d.profesional = profesional;			
+			"data": function (d) {
+				d.fechai = fechai;
+				d.fechaf = fechaf;
+				d.clientes = clientes;
+				d.profesional = profesional;
 				d.estado = estado;
-            }	
-		},		
-		"columns":[
+				d.buscar = $('#buscar').val() || $('#dataTableReporteFacturacionMain_filter input').val() || '';
+			}
+		},
+		"columns": [
 			{
 				"data": "fecha",
-				"render": function(data, type, row) {
-					return '<a href="#" class="showInvoiceDetail">' + data + '</a>';
-				}
-			},			
-			{
-				"data": "tipo_documento",
-				"render": function(data, type, row) {
-					var color = data === 'Contado' ? '#FFA500' : '#9b59b6'; // Naranja para "Contado" y morado para "Crédito"
-					return '<span class="tipo-documento" style="border: 2px solid ' + color + '; border-radius: 12px; padding: 5px 10px; color: ' + color + ';">' + data + '</span>';
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					return '' +
+						'<a href="#" class="showInvoiceDetail badge badge-light border text-primary px-2 py-2" style="font-size: 12px; border-radius: 8px;">' +
+							'<i class="fas fa-calendar-alt mr-1"></i>' + limpiarTexto(row.fecha1) +
+						'</a>';
 				}
 			},
-			{"data": "identidad"},			
-			{"data": "paciente"},	
-			{"data": "factura"},
-			{"data": "precio"},
-			{"data": "isv_neto"},	
-			{"data": "descuento"},
-			{"data": "total"},
-			{"data": "servicio"},
-			{"data": "profesional"},								
+			{
+				"data": "tipo_documento",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					var clase = data === 'Contado' ? 'badge-warning text-dark' : 'badge-primary';
+					var icono = data === 'Contado' ? 'fas fa-money-bill-wave' : 'fas fa-hand-holding-usd';
+
+					return '' +
+						'<span class="badge ' + clase + ' px-3 py-2" style="font-size: 12px; border-radius: 20px;">' +
+							'<i class="' + icono + ' mr-1"></i>' + limpiarTexto(data) +
+						'</span>';
+				}
+			},
+			{
+				"data": "identidad",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					return '' +
+						'<span class="badge badge-light border px-2 py-2" style="font-size: 12px; border-radius: 8px;">' +
+							'<i class="fas fa-id-card mr-1 text-muted"></i>' + limpiarTexto(data) +
+						'</span>';
+				}
+			},
+			{
+				"data": "paciente",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					return '' +
+						'<span class="font-weight-bold text-dark" style="font-size: 12px;">' +
+							'<i class="fas fa-user text-info mr-1"></i>' + limpiarTexto(data) +
+						'</span>';
+				}
+			},
+			{
+				"data": "factura",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					return '' +
+						'<span class="badge badge-light px-3 py-2" style="font-size: 12px; border-radius: 8px; border: 1px solid #f0ad4e; color: #8a5a00; background-color: #fff8e5;">' +
+							'<i class="fas fa-file-invoice mr-1"></i>' + limpiarTexto(data) +
+						'</span>';
+				}
+			},
+			{
+				"data": "precio",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return parseFloat(data) || 0;
+					}
+
+					return '<span class="font-weight-bold text-dark">' + formatMoney(data) + '</span>';
+				}
+			},
+			{
+				"data": "isv_neto",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return parseFloat(data) || 0;
+					}
+
+					return '<span class="font-weight-bold text-info">' + formatMoney(data) + '</span>';
+				}
+			},
+			{
+				"data": "descuento",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return parseFloat(data) || 0;
+					}
+
+					return '<span class="font-weight-bold text-danger">' + formatMoney(data) + '</span>';
+				}
+			},
+			{
+				"data": "total",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return parseFloat(data) || 0;
+					}
+
+					return '' +
+						'<span class="badge badge-light border border-success text-success px-3 py-2" style="font-size: 13px; border-radius: 8px;">' +
+							formatMoney(data) +
+						'</span>';
+				}
+			},
+			{
+				"data": "servicio",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					return '<span class="text-dark">' + limpiarTexto(data) + '</span>';
+				}
+			},
+			{
+				"data": "profesional",
+				"render": function (data, type, row) {
+					if (type !== 'display') {
+						return data;
+					}
+
+					return '' +
+						'<span class="font-weight-bold text-dark" style="font-size: 12px;">' +
+							'<i class="fas fa-user-md text-primary mr-1"></i>' + limpiarTexto(data) +
+						'</span>';
+				}
+			},
 			{
 				"data": null,
-				"defaultContent": 
+				"orderable": false,
+				"searchable": false,
+				"defaultContent":
 					'<div class="btn-group">' +
-						'<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
-							'<i class="fas fa-cog"></i>' +
+						'<button type="button" class="btn btn-primary btn-sm dropdown-toggle shadow-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 6px;">' +
+							'<i class="fas fa-cog mr-1"></i> Acciones' +
 						'</button>' +
-						'<div class="dropdown-menu">' +
-							'<a class="dropdown-item printBill" href="#"><i class="fas fa-print fa-lg"></i> Imprimir</a>' +
-							'<a class="dropdown-item closeBill" href="#"><i class="fas fa-calculator fa-lg"></i> Cierre</a>' +
-							'<a class="dropdown-item deleteBill" href="#"><i class="fa-solid fa-ban fa-lg"></i> Anular</a>' +
+						'<div class="dropdown-menu dropdown-menu-right shadow border-0" style="border-radius: 8px;">' +
+							'<a class="dropdown-item printBill" href="#"><i class="fas fa-print text-info mr-2"></i> Imprimir</a>' +
+							'<a class="dropdown-item closeBill" href="#"><i class="fas fa-calculator text-primary mr-2"></i> Cierre</a>' +
+							'<div class="dropdown-divider"></div>' +
+							'<a class="dropdown-item deleteBill text-danger" href="#"><i class="fas fa-ban mr-2"></i> Anular</a>' +
 						'</div>' +
 					'</div>'
 			}
-		],	
-		"footerCallback": function(row, data, start, end, display) {
-            var api = this.api();
+		],
+		"footerCallback": function (row, data, start, end, display) {
+			var api = this.api();
 
-            // Limpiar el contenido del footer
-            $('#footer-importe').html('');
-            $('#footer-isv').html('');
-            $('#footer-descuento').html('');
-            $('#footer-neto').html('');
-            $('#tipo_pago').html('');
-            $('#total_pago').html('');
+			$('#footer-importe').html('');
+			$('#footer-isv').html('');
+			$('#footer-descuento').html('');
+			$('#footer-neto').html('');
+			$('#tipo_pago').html('');
+			$('#total_pago').html('');
 
-            // Función para calcular la suma de una columna específica
-            var sumaColumna = function(index) {
-                return api.column(index, { page: 'current' })
-                    .data()
-                    .reduce(function(a, b) {
-                        return (parseFloat(a) || 0) + (parseFloat(b) || 0);
-                    }, 0);
-            };
+			var sumaColumna = function (index) {
+				return api.column(index, { page: 'current' }).data().reduce(function (a, b) {
+					return (parseFloat(a) || 0) + (parseFloat(b) || 0);
+				}, 0);
+			};
 
-            // Calcular totales para las columnas específicas
-            var totalImporte = sumaColumna(5);
-            var totalISV = sumaColumna(6);
-            var totalDescuento = sumaColumna(7);
-            var totalNeto = sumaColumna(8);
+			var totalImporte = sumaColumna(5);
+			var totalISV = sumaColumna(6);
+			var totalDescuento = sumaColumna(7);
+			var totalNeto = sumaColumna(8);
 
-            var formatter = new Intl.NumberFormat('es-HN', {
-                style: 'currency',
-                currency: 'HNL',
-                minimumFractionDigits: 2,
-            });
+			var formatter = new Intl.NumberFormat('es-HN', {
+				style: 'currency',
+				currency: 'HNL',
+				minimumFractionDigits: 2
+			});
 
-            // Mostrar totales de las columnas
-            $('#footer-importe').html(formatter.format(totalImporte));
-            $('#footer-isv').html(formatter.format(totalISV));
-            $('#footer-descuento').html(formatter.format(totalDescuento));
-            $('#footer-neto').html(formatter.format(totalNeto));
-        },
+			$('#footer-importe').html(formatter.format(totalImporte));
+			$('#footer-isv').html(formatter.format(totalISV));
+			$('#footer-descuento').html(formatter.format(totalDescuento));
+			$('#footer-neto').html(formatter.format(totalNeto));
+		},
 		"lengthMenu": lengthMenu20,
 		"stateSave": true,
-		"bDestroy": true,		
-		"language": idioma_español,//esta se encuenta en el archivo main.js
-		"dom": dom,			
-		"buttons":[		
+		"bDestroy": true,
+		"language": idioma_español,
+		"dom": dom,
+		"order": [[0, "desc"]],
+		"buttons": [
 			{
-				text:      '<i class="fas fa-sync-alt fa-lg"></i> Actualizar',
+				text: '<i class="fas fa-sync-alt fa-lg"></i> Actualizar',
 				titleAttr: 'Actualizar Facturas',
 				className: 'btn btn-info',
-				action: 	function(){
+				action: function () {
+					$('#buscar').val('');
 					listar_reporte_facturacion();
 				}
-			},	
+			},
 			{
-				text:      '<i class="fas fa-calculator fa-lg"></i> Cierre',
+				text: '<i class="fas fa-calculator fa-lg"></i> Cierre',
 				titleAttr: 'Cierre de Caja',
 				className: 'btn btn-primary',
-				action: 	function(){
+				action: function () {
 					cierreBill();
 				}
-			},			
+			},
 			{
-				text:      '<i class="fa-solid fa-file-pdf fa-lg"></i> Reporte PDF',
+				text: '<i class="fas fa-file-pdf fa-lg"></i> Reporte PDF',
 				titleAttr: 'Reporte de Facturación PDF',
 				className: 'btn btn-danger',
-				action: 	function(){
+				action: function () {
 					reporteFacturacion();
 				}
 			},
 			{
-				text:      '<i class="fa-solid fa-file-excel fa-lg"></i> Reporte Excel',
+				text: '<i class="fas fa-file-excel fa-lg"></i> Reporte Excel',
 				titleAttr: 'Reporte de Facturación Excel',
 				className: 'btn btn-success',
-				action: 	function(){
+				action: function () {
 					reporteFacturacionExcel();
 				}
 			}
-		]		
-	});	 
+		]
+	});
+
 	table_reporte_facturacion.search('').draw();
+
 	$('#buscar').focus();
-	
+
+	var timerBuscar = null;
+
+	$(document).off('keyup', '#buscar');
+	$(document).on('keyup', '#buscar', function () {
+		clearTimeout(timerBuscar);
+
+		timerBuscar = setTimeout(function () {
+			table_reporte_facturacion.search('').ajax.reload();
+		}, 400);
+	});
+
 	show_invoice_detail_dataTable("#dataTableReporteFacturacionMain tbody", table_reporte_facturacion);
 	print_bill_dataTable("#dataTableReporteFacturacionMain tbody", table_reporte_facturacion);
 	close_bill_dataTable("#dataTableReporteFacturacionMain tbody", table_reporte_facturacion);
-	delete_bill_dataTable("#dataTableReporteFacturacionMain tbody", table_reporte_facturacion);	
+	delete_bill_dataTable("#dataTableReporteFacturacionMain tbody", table_reporte_facturacion);
 }
 
 var show_invoice_detail_dataTable = function(tbody, table){
@@ -684,6 +831,7 @@ function reporteFacturacion() {
         "fechaf": fechaf,
         "clientes": clientes,
         "profesional": profesional,
+		"documento_id": 1,
         "db": "<?php echo DB; ?>"
     };
 
@@ -706,6 +854,7 @@ function reporteFacturacionExcel() {
         "clientes": clientes,
         "profesional": profesional,
 		"tipo": "Excel",
+		"documento_id": 1,
         "db": "<?php echo DB; ?>"
     };
 

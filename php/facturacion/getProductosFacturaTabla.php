@@ -1,4 +1,5 @@
 <?php 
+//getProductosFacturaTabla
 session_start();   
 include "../funtions.php";
 	

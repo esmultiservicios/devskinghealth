@@ -1,270 +1,639 @@
 <?php
+// paginar.php
 session_start();
 include "../funtions.php";
 
-//CONEXION A DB
+header('Content-Type: application/json; charset=utf-8');
+
+$db_main = DBIZZY;
 $mysqli = connect_mysqli();
+$mysqliOtro = connect_mysqli_db($db_main);
 
-$colaborador_id = $_SESSION['colaborador_id'];
-$type = $_SESSION['type'];
-$paginaActual = $_POST['partida'];
-$fechai = $_POST['fechai'];
-$fechaf = $_POST['fechaf'];
-$dato = $_POST['dato'];
-$clientes = $_POST['clientes'];
-$profesional = $_POST['profesional'];
-$estado = $_POST['estado'];
-$usuario = $_SESSION['colaborador_id'];
-$usuario = $_SESSION['colaborador_id'];
-$type = $_SESSION['type'];
-
-$busqueda_paciente = "";
-$consulta_datos = "";
-$profesional_consulta = "";
-
-if($estado == 2 || $estado == 4){
-	/*if($profesional == "" && $dato == ""){
-		$where = "WHERE f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado = '$estado' AND f.usuario = '$colaborador_id'";
-	}else if($profesional != "" && $dato == ""){
-		$where = "WHERE f.colaborador_id = '$profesional' AND f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado = '$estado' AND f.usuario = '$colaborador_id'";
-	}else if($profesional != "" && $dato != ""){
-		$where = "WHERE f.colaborador_id = '$profesional' AND f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado = '$estado' AND f.usuario = '$colaborador_id' AND (p.expediente LIKE '%$dato%' OR CONCAT(p.nombre,' ',p.apellido) LIKE '%$dato%' OR p.identidad LIKE '$dato%' OR p.apellido LIKE '$dato%')";
-	}else if($profesional == "" && $dato != ""){
-		$where = "WHERE f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado = '$estado' AND f.usuario = '$colaborador_id' AND (p.expediente LIKE '%$dato%' OR CONCAT(p.nombre,' ',p.apellido) LIKE '%$dato%' OR p.identidad LIKE '$dato%' OR p.apellido LIKE '$dato%')";
-	}else{
-		$where = "WHERE f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado = '$estado' AND f.usuario = '$colaborador_id'";
-	}*/
-	if($clientes != ""){
-		$busqueda_paciente = "AND f.pacientes_id = '$clientes' AND f.usuario = '$colaborador_id'";
-	}
-
-	if($profesional != ""){
-	  $profesional_consulta = "AND f.colaborador_id = '$profesional'";
-	}
-
-	if($dato == !""){
-		$consulta_datos = "AND f.usuario = '$colaborador_id' AND (CONCAT(p.nombre,' ',p.apellido) LIKE '%$dato%' OR p.apellido LIKE '$dato%' OR p.identidad LIKE '$dato%' OR f.number LIKE '$dato%' OR m.number LIKE '$dato%')";
-	}
-}else{
-  /*if($profesional == "" && $dato == ""){
-		$where = "WHERE f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado = '$estado'";
-	}else if($profesional != "" && $dato == ""){
-		$where = "WHERE f.colaborador_id = '$profesional' AND f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado = '$estado'";
-	}else if($profesional != "" && $dato != ""){
-		$where = "WHERE f.colaborador_id = '$profesional' AND f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado = '$estado' AND (p.expediente LIKE '%$dato%' OR CONCAT(p.nombre,' ',p.apellido) LIKE '%$dato%' OR p.identidad LIKE '$dato%' OR p.apellido LIKE '$dato%')";
-	}else if($profesional == "" && $dato != ""){
-		$where = "WHERE f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado = '$estado' AND (p.expediente LIKE '%$dato%' OR CONCAT(p.nombre,' ',p.apellido) LIKE '%$dato%' OR p.identidad LIKE '$dato%' OR p.apellido LIKE '$dato%')";
-	}else{
-		$where = "WHERE f.fecha BETWEEN '$fechai' AND '$fechaf' AND f.estado = '$estado'";
-	}*/
-
-	if($clientes != ""){
-		$busqueda_paciente = "AND f.pacientes_id = '$clientes'";
-	}
-
-	if($profesional != ""){
-	  $profesional_consulta = "AND f.colaborador_id = '$profesional'";
-	}
-
-	if($dato == !""){
-		$consulta_datos = "AND (CONCAT(p.nombre,' ',p.apellido) LIKE '%$dato%' OR p.apellido LIKE '$dato%' OR p.identidad LIKE '$dato%' OR f.number LIKE '$dato%')";
-	}
+if (!$mysqli || !$mysqliOtro) {
+    echo json_encode(array(
+        0 => '<div class="alert alert-danger mb-0"><i class="fas fa-exclamation-triangle mr-1"></i> No se pudo conectar con la base de datos.</div>',
+        1 => ''
+    ));
+    exit;
 }
 
-$query = "SELECT f.facturas_id AS facturas_id, DATE_FORMAT(f.fecha, '%d/%m/%Y') AS 'fecha', CONCAT(p.nombre,' ',p.apellido) AS 'paciente', p.identidad AS 'identidad', CONCAT(c.nombre,' ',c.apellido) AS 'profesional', f.estado AS 'estado', s.nombre AS 'consultorio', sc.prefijo AS 'prefijo', f.number AS 'numero', sc.relleno AS 'relleno'
-	FROM facturas AS f
-	INNER JOIN pacientes AS p
-	ON f.pacientes_id = p.pacientes_id
-	INNER JOIN secuencia_facturacion AS sc
-	ON f.secuencia_facturacion_id = sc.secuencia_facturacion_id
-	INNER JOIN servicios AS s
-	ON f.servicio_id = s.servicio_id
-	INNER JOIN colaboradores AS c
-	ON f.colaborador_id = c.colaborador_id
-	WHERE f.estado = '$estado'
-	$busqueda_paciente
-	$consulta_datos
-	$profesional_consulta
-	ORDER BY f.pacientes_id ASC";
+$mysqli->set_charset("utf8mb4");
+$mysqliOtro->set_charset("utf8mb4");
 
-$result = $mysqli->query($query) or die($mysqli->error);
+function limpiar_entero($valor)
+{
+    if ($valor === "" || $valor === null) {
+        return 0;
+    }
 
-$nroLotes = 10;
-$nroProductos = $result->num_rows;
-$nroPaginas = ceil($nroProductos/$nroLotes);
-$lista = '';
-$tabla = '';
-
-if($paginaActual > 1){
-	$lista = $lista.'<li class="page-item"><a class="page-link" href="javascript:pagination('.(1).');void(0);">Inicio</a></li>';
+    return (int)$valor;
 }
 
-if($paginaActual > 1){
-	$lista = $lista.'<li class="page-item"><a class="page-link" href="javascript:pagination('.($paginaActual-1).');void(0);">Anterior '.($paginaActual-1).'</a></li>';
+function limpiar_texto($valor)
+{
+    if ($valor === null) {
+        return "";
+    }
+
+    return trim((string)$valor);
 }
 
-if($paginaActual < $nroPaginas){
-	$lista = $lista.'<li class="page-item"><a class="page-link" href="javascript:pagination('.($paginaActual+1).');void(0);">Siguiente '.($paginaActual+1).' de '.$nroPaginas.'</a></li>';
+function h($valor)
+{
+    return htmlspecialchars($valor ?? '', ENT_QUOTES, 'UTF-8');
 }
 
-if($paginaActual > 1){
-	$lista = $lista.'<li class="page-item"><a class="page-link" href="javascript:pagination('.($nroPaginas).');void(0);">Ultima</a></li>';
+function ejecutar_stmt($mysqli, $sql, $types = "", $params = array())
+{
+    $stmt = $mysqli->prepare($sql);
+
+    if (!$stmt) {
+        throw new Exception("Error al preparar consulta: " . $mysqli->error);
+    }
+
+    if ($types != "" && count($params) > 0) {
+        $bind_names = array();
+        $bind_names[] = $types;
+
+        for ($i = 0; $i < count($params); $i++) {
+            $bind_names[] = &$params[$i];
+        }
+
+        call_user_func_array(array($stmt, 'bind_param'), $bind_names);
+    }
+
+    if (!$stmt->execute()) {
+        throw new Exception("Error al ejecutar consulta: " . $stmt->error);
+    }
+
+    return $stmt;
 }
 
-if($paginaActual <= 1){
-	$limit = 0;
-}else{
-	$limit = $nroLotes*($paginaActual-1);
+function obtener_secuencia_facturacion($mysqliOtro, $secuencia_facturacion_id, &$cache_secuencia)
+{
+    $secuencia_facturacion_id = (int)$secuencia_facturacion_id;
+
+    if (isset($cache_secuencia[$secuencia_facturacion_id])) {
+        return $cache_secuencia[$secuencia_facturacion_id];
+    }
+
+    $datos = array(
+        "prefijo" => "",
+        "relleno" => 0
+    );
+
+    if ($secuencia_facturacion_id <= 0) {
+        $cache_secuencia[$secuencia_facturacion_id] = $datos;
+        return $datos;
+    }
+
+    $sql = "SELECT prefijo, relleno
+            FROM secuencia_facturacion
+            WHERE secuencia_facturacion_id = ?
+            LIMIT 1";
+
+    $stmt = ejecutar_stmt($mysqliOtro, $sql, "i", array($secuencia_facturacion_id));
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $prefijo = "";
+        $relleno = 0;
+
+        $stmt->bind_result($prefijo, $relleno);
+        $stmt->fetch();
+
+        $datos = array(
+            "prefijo" => $prefijo,
+            "relleno" => $relleno
+        );
+    }
+
+    $stmt->close();
+
+    $cache_secuencia[$secuencia_facturacion_id] = $datos;
+
+    return $datos;
 }
 
-$registro = "SELECT f.facturas_id AS facturas_id, DATE_FORMAT(f.fecha, '%d/%m/%Y') AS 'fecha', CONCAT(p.nombre,' ',p.apellido) AS 'paciente', p.identidad AS 'identidad', CONCAT(c.nombre,' ',c.apellido) AS 'profesional', f.estado AS 'estado', s.nombre AS 'consultorio', sc.prefijo AS 'prefijo', f.number AS 'numero', sc.relleno AS 'relleno'
-	FROM facturas AS f
-	INNER JOIN pacientes AS p
-	ON f.pacientes_id = p.pacientes_id
-	INNER JOIN secuencia_facturacion AS sc
-	ON f.secuencia_facturacion_id = sc.secuencia_facturacion_id
-	INNER JOIN servicios AS s
-	ON f.servicio_id = s.servicio_id
-	INNER JOIN colaboradores AS c
-	ON f.colaborador_id = c.colaborador_id
-	WHERE f.estado = '$estado'
-	$busqueda_paciente
-	$consulta_datos
-	$profesional_consulta
-	ORDER BY f.pacientes_id ASC
-	LIMIT $limit, $nroLotes";
-$result = $mysqli->query($registro) or die($mysqli->error);
+function obtener_totales_factura($mysqli, $facturas_id)
+{
+    $facturas_id = (int)$facturas_id;
 
-$tabla = $tabla.'<table class="table table-striped table-condensed table-hover">
-			<tr>
-			<th width="2.69%">No.</th>
-			<th width="5.69%">Fecha</th>
-			<th width="10.69%">Factura</th>
-			<th width="14.69%">Cliente</th>
-			<th width="7.69%">Identidad</th>
-			<th width="9.69%">Profesional</th>
-			<th width="7.69%">Consultorio</th>
-			<th width="7.69%">Importe</th>
-			<th width="7.69%">ISV</th>
-			<th width="7.69%">Descuento</th>
-			<th width="7.69%">Neto</th>
-			<th width="5.69%">Estado</th>
-			<th width="5.69%">Opciones</th>
-			</tr>';
-$i = 1;
-while($registro2 = $result->fetch_assoc()){
-	$facturas_id = $registro2['facturas_id'];
-	//CONSULTAR DATOS DEL DE TALLE DE LA FACTURACION
-	$query_detalle = "SELECT cantidad, precio, descuento, isv_valor
-		FROM facturas_detalle
-		WHERE facturas_id = '$facturas_id'";
-	$result_detalles = $mysqli->query($query_detalle) or die($mysqli->error);
+    $totales = array(
+        "precio" => 0,
+        "descuento" => 0,
+        "isv_neto" => 0,
+        "total" => 0
+    );
 
-	$cantidad = 0;
-	$descuento = 0;
-	$precio = 0;
-	$total_precio = 0;
-	$total = 0;
-	$isv_neto = 0;
-	$neto_antes_isv = 0;
+    $sql = "SELECT cantidad, precio, descuento, isv_valor
+            FROM facturas_detalle
+            WHERE facturas_id = ?";
 
-	while($registrodetalles = $result_detalles->fetch_assoc()){
-			$precio += $registrodetalles["precio"];
-			$cantidad += $registrodetalles["cantidad"];
-			$descuento += $registrodetalles["descuento"];
-			$total_precio = $registrodetalles["precio"] * $registrodetalles["cantidad"];
-			$neto_antes_isv += $total_precio;
-			$isv_neto += $registrodetalles["isv_valor"];
-	}
+    $stmt = ejecutar_stmt($mysqli, $sql, "i", array($facturas_id));
+    $result = $stmt->get_result();
 
-	$total = ($neto_antes_isv + $isv_neto) - $descuento;
+    $importe = 0;
+    $descuento = 0;
+    $isv_neto = 0;
 
-	if($registro2['numero'] == 0){
-		$numero = "Aún no se ha generado";
-	}else{
-		$numero = $registro2['prefijo'].''.rellenarDigitos($registro2['numero'], $registro2['relleno']);
-	}
+    while ($registrodetalles = $result->fetch_assoc()) {
+        $cantidad = (float)$registrodetalles["cantidad"];
+        $precio_unitario = (float)$registrodetalles["precio"];
 
-	$estado = $registro2['estado'];
-	$factura = "";
-	$eliminar = "";
-	$pay = "";
-	$send_mail = "";
-	$pay_credit = "";
+        $importe += ($precio_unitario * $cantidad);
+        $descuento += (float)$registrodetalles["descuento"];
+        $isv_neto += (float)$registrodetalles["isv_valor"];
+    }
 
-	if($estado==1){
-		$eliminar = '<a style="text-decoration:none;" data-toggle="tooltip" data-placement="right" href="javascript:deleteBill('.$registro2['facturas_id'].');void(0);" class="fas fa-trash fa-lg" title="Eliminar Factura"></a>';
-	}
+    $stmt->close();
 
-	if($estado==2 || $estado==3 || $estado==4){
-		$factura = '<a style="text-decoration:none;" data-toggle="tooltip" data-placement="right" href="javascript:printBill('.$registro2['facturas_id'].');void(0);" class="fas fa-print fa-lg" title="Imprimir Factura"></a>';
-	}
+    $total = ($importe + $isv_neto) - $descuento;
 
-	if($estado == 2){
-		$send_mail = '<a style="text-decoration:none;" data-toggle="tooltip" data-placement="right" href="javascript:mailBill('.$registro2['facturas_id'].');void(0);" class="far fa-paper-plane fa-lg" title="Enviar Factura"></a>';
-	}
+    $totales["precio"] = $importe;
+    $totales["descuento"] = $descuento;
+    $totales["isv_neto"] = $isv_neto;
+    $totales["total"] = $total;
 
-	if($estado == 4){
-		$pay_credit = '<a style="text-decoration:none;" data-toggle="tooltip" data-placement="right" href="javascript:pago('.$registro2['facturas_id'].');void(0);" class="fab fa-amazon-pay fa-lg" title="Pagar Factura"></a>';
-	}
-
-	$estado_ = "";
-	if($estado == 1){
-		$estado_ = "Borrador";
-	}else if($estado == 2){
-		$estado_ = "Pagada";
-	}else if($estado == 3){
-		$estado_ = "Cancelada";
-	}else if($estado == 4){
-		$estado_ = "Crédito";
-	}else{
-		$estado_ = "";
-	}
-
-	if($estado==1){
-		$pay = '<a style="text-decoration:none;" data-toggle="tooltip" data-placement="right" title = "Realizar Cobro" href="javascript:pay('.$registro2['facturas_id'].');void(0);" class="fas fa-file-invoice fa-lg"></a>';
-	}
-
-	$tabla = $tabla.'<tr>
-			<td>'.$i.'</td>
-			<td>'.$registro2['fecha'].'</td>
-			<td>'.$numero.'</td>
-			<td>'.$registro2['paciente'].'</td>
-			<td>'.$registro2['identidad'].'</td>
-			<td>'.$registro2['profesional'].'</td>
-			<td>'.$registro2['consultorio'].'</td>
-      <td>'.number_format($precio,2).'</td>
-      <td>'.number_format($isv_neto,2).'</td>
-			<td>'.number_format($descuento,2).'</td>
-			<td>'.number_format($total,2).'</td>
-			<td>'.$estado_.'</td>
-			<td>
-			  '.$send_mail.'
-			  '.$pay_credit.'
-			  '.$pay.''.$factura.'
-			  '.$eliminar.'
-			</td>
-			</tr>';
-			$i++;
+    return $totales;
 }
 
-if($nroProductos == 0){
-	$tabla = $tabla.'<tr>
-	   <td colspan="13" style="color:#C7030D">No se encontraron resultados, seleccione un profesional para verificar si hay registros almacenados</td>
-	</tr>';
-}else{
-   $tabla = $tabla.'<tr>
-	  <td colspan="13"><b><p ALIGN="center">Total de Registros Encontrados '.$nroProductos.'</p></b>
-   </tr>';
+function badge_estado_factura($estado_fila)
+{
+    $estado_fila = (int)$estado_fila;
+
+    if ($estado_fila == 1) {
+        return '<span class="badge px-3 py-2" style="font-size:13px; border-radius:20px; color:#8a5a00; background:#fff8e5; border:1px solid #f0ad4e;">
+                    <i class="fas fa-edit mr-1"></i> Borrador
+                </span>';
+    }
+
+    if ($estado_fila == 2) {
+        return '<span class="badge px-3 py-2" style="font-size:13px; border-radius:20px; color:#0b7a32; background:#ecfff4; border:1px solid #b9ebcc;">
+                    <i class="fas fa-check-circle mr-1"></i> Pagada
+                </span>';
+    }
+
+    if ($estado_fila == 3) {
+        return '<span class="badge px-3 py-2" style="font-size:13px; border-radius:20px; color:#b30021; background:#fff1f3; border:1px solid #f1b7c0;">
+                    <i class="fas fa-ban mr-1"></i> Cancelada
+                </span>';
+    }
+
+    if ($estado_fila == 4) {
+        return '<span class="badge px-3 py-2" style="font-size:13px; border-radius:20px; color:#005f73; background:#e9fbff; border:1px solid #9de2ef;">
+                    <i class="fas fa-hand-holding-usd mr-1"></i> Crédito
+                </span>';
+    }
+
+    return '<span class="badge badge-light px-3 py-2" style="font-size:13px; border-radius:20px;">Sin estado</span>';
 }
 
-$tabla = $tabla.'</table>';
+function badge_factura($numero)
+{
+    if ($numero == "Aún no se ha generado") {
+        return '<span class="badge px-3 py-2" style="font-size:13px; border-radius:20px; color:#777; background:#f1f1f1;">
+                    <i class="fas fa-clock mr-1"></i> Aún no se ha generado
+                </span>';
+    }
 
-$array = array(0 => $tabla,
-			   1 => $lista);
+    return '<span class="badge px-3 py-2" style="font-size:13px; border-radius:8px; color:#005f8f; background:#f5fbff; border:1px solid #b8dfff;">
+                <i class="fas fa-file-invoice mr-1"></i> ' . h($numero) . '
+            </span>';
+}
 
-echo json_encode($array);
+try {
+    $colaborador_id = isset($_SESSION['colaborador_id']) ? limpiar_entero($_SESSION['colaborador_id']) : 0;
+    $type = isset($_SESSION['type']) ? limpiar_entero($_SESSION['type']) : 0;
 
-$result->free();//LIMPIAR RESULTADO
-$mysqli->close();//CERRAR CONEXIÓN
-?>
+    $paginaActual = isset($_POST['partida']) ? limpiar_entero($_POST['partida']) : 1;
+    $fechai = isset($_POST['fechai']) ? limpiar_texto($_POST['fechai']) : "";
+    $fechaf = isset($_POST['fechaf']) ? limpiar_texto($_POST['fechaf']) : "";
+    $dato = isset($_POST['dato']) ? limpiar_texto($_POST['dato']) : "";
+    $clientes = isset($_POST['clientes']) ? limpiar_entero($_POST['clientes']) : 0;
+    $profesional = isset($_POST['profesional']) ? limpiar_entero($_POST['profesional']) : 0;
+    $estado = isset($_POST['estado']) ? limpiar_entero($_POST['estado']) : 0;
+
+    if ($paginaActual <= 0) {
+        $paginaActual = 1;
+    }
+
+    $where = "WHERE f.estado = ?";
+    $types = "i";
+    $params = array($estado);
+
+    if ($fechai != "" && $fechaf != "" && $dato == "") {
+        $where .= " AND f.fecha BETWEEN ? AND ?";
+        $types .= "ss";
+        $params[] = $fechai;
+        $params[] = $fechaf;
+    }
+
+    if ($estado == 2 || $estado == 4) {
+        if ($clientes != 0) {
+            $where .= " AND f.pacientes_id = ? AND f.usuario = ?";
+            $types .= "ii";
+            $params[] = $clientes;
+            $params[] = $colaborador_id;
+        }
+
+        if ($profesional != 0) {
+            $where .= " AND f.colaborador_id = ?";
+            $types .= "i";
+            $params[] = $profesional;
+        }
+
+        if ($dato != "") {
+            $like_dato_general = "%" . $dato . "%";
+            $like_dato_inicio = $dato . "%";
+
+            $where .= " AND f.usuario = ? 
+                        AND (
+                            CONCAT(p.nombre,' ',p.apellido) LIKE ? 
+                            OR CONCAT(p.apellido,' ',p.nombre) LIKE ?
+                            OR p.nombre LIKE ?
+                            OR p.apellido LIKE ? 
+                            OR p.identidad LIKE ? 
+                            OR f.number LIKE ?
+                        )";
+
+            $types .= "issssss";
+            $params[] = $colaborador_id;
+            $params[] = $like_dato_general;
+            $params[] = $like_dato_general;
+            $params[] = $like_dato_inicio;
+            $params[] = $like_dato_inicio;
+            $params[] = $like_dato_inicio;
+            $params[] = $like_dato_inicio;
+        }
+    } else {
+        if ($clientes != 0) {
+            $where .= " AND f.pacientes_id = ?";
+            $types .= "i";
+            $params[] = $clientes;
+        }
+
+        if ($profesional != 0) {
+            $where .= " AND f.colaborador_id = ?";
+            $types .= "i";
+            $params[] = $profesional;
+        }
+
+        if ($dato != "") {
+            $like_dato_general = "%" . $dato . "%";
+            $like_dato_inicio = $dato . "%";
+
+            $where .= " AND (
+                            CONCAT(p.nombre,' ',p.apellido) LIKE ? 
+                            OR CONCAT(p.apellido,' ',p.nombre) LIKE ?
+                            OR p.nombre LIKE ?
+                            OR p.apellido LIKE ? 
+                            OR p.identidad LIKE ? 
+                            OR f.number LIKE ?
+                        )";
+
+            $types .= "ssssss";
+            $params[] = $like_dato_general;
+            $params[] = $like_dato_general;
+            $params[] = $like_dato_inicio;
+            $params[] = $like_dato_inicio;
+            $params[] = $like_dato_inicio;
+            $params[] = $like_dato_inicio;
+        }
+    }
+
+    $sql_count = "SELECT f.facturas_id
+                  FROM facturas AS f
+                  INNER JOIN pacientes AS p
+                      ON f.pacientes_id = p.pacientes_id
+                  INNER JOIN servicios AS s
+                      ON f.servicio_id = s.servicio_id
+                  INNER JOIN colaboradores AS c
+                      ON f.colaborador_id = c.colaborador_id
+                  $where";
+
+    $stmt_count = ejecutar_stmt($mysqli, $sql_count, $types, $params);
+    $stmt_count->store_result();
+
+    $nroLotes = 10;
+    $nroProductos = $stmt_count->num_rows;
+    $nroPaginas = ceil($nroProductos / $nroLotes);
+
+    $stmt_count->close();
+
+    $lista = '';
+    $tabla = '';
+
+    if ($nroPaginas > 1) {
+        $lista .= '<nav aria-label="Paginación de facturas">';
+        $lista .= '<ul class="pagination pagination-sm justify-content-center mt-3">';
+
+        if ($paginaActual > 1) {
+            $lista .= '<li class="page-item">
+                            <a class="page-link" href="javascript:pagination(1);void(0);">
+                                <i class="fas fa-angle-double-left"></i> Inicio
+                            </a>
+                       </li>';
+
+            $lista .= '<li class="page-item">
+                            <a class="page-link" href="javascript:pagination(' . ($paginaActual - 1) . ');void(0);">
+                                <i class="fas fa-angle-left"></i> Anterior
+                            </a>
+                       </li>';
+        }
+
+        $lista .= '<li class="page-item active">
+                        <a class="page-link" href="javascript:void(0);">
+                            Página ' . $paginaActual . ' de ' . $nroPaginas . '
+                        </a>
+                   </li>';
+
+        if ($paginaActual < $nroPaginas) {
+            $lista .= '<li class="page-item">
+                            <a class="page-link" href="javascript:pagination(' . ($paginaActual + 1) . ');void(0);">
+                                Siguiente <i class="fas fa-angle-right"></i>
+                            </a>
+                       </li>';
+
+            $lista .= '<li class="page-item">
+                            <a class="page-link" href="javascript:pagination(' . $nroPaginas . ');void(0);">
+                                Última <i class="fas fa-angle-double-right"></i>
+                            </a>
+                       </li>';
+        }
+
+        $lista .= '</ul>';
+        $lista .= '</nav>';
+    }
+
+    $limit = ($paginaActual <= 1) ? 0 : $nroLotes * ($paginaActual - 1);
+
+    $sql_registro = "SELECT 
+                        f.facturas_id AS facturas_id, 
+                        DATE_FORMAT(f.fecha, '%d/%m/%Y') AS fecha, 
+                        CONCAT(p.nombre,' ',p.apellido) AS paciente, 
+                        p.identidad AS identidad, 
+                        CONCAT(c.nombre,' ',c.apellido) AS profesional, 
+                        f.estado AS estado, 
+                        s.nombre AS consultorio, 
+                        f.secuencia_facturacion_id AS secuencia_facturacion_id,
+                        f.number AS numero
+                     FROM facturas AS f
+                     INNER JOIN pacientes AS p
+                        ON f.pacientes_id = p.pacientes_id
+                     INNER JOIN servicios AS s
+                        ON f.servicio_id = s.servicio_id
+                     INNER JOIN colaboradores AS c
+                        ON f.colaborador_id = c.colaborador_id
+                     $where
+                     ORDER BY f.number DESC, f.facturas_id DESC
+                     LIMIT ?, ?";
+
+    $types_registro = $types . "ii";
+    $params_registro = $params;
+    $params_registro[] = $limit;
+    $params_registro[] = $nroLotes;
+
+    $stmt_registro = ejecutar_stmt($mysqli, $sql_registro, $types_registro, $params_registro);
+    $result = $stmt_registro->get_result();
+
+    $tabla .= '
+    <div class="table-responsive">
+        <table class="table table-striped table-hover mb-0" style="font-size:13px;">
+            <thead>
+                <tr style="background:#1297a5; color:#fff;">
+                    <th class="text-center align-middle py-3" width="4%">No.</th>
+                    <th class="text-center align-middle py-3" width="7%">Fecha</th>
+                    <th class="text-center align-middle py-3" width="13%">Factura</th>
+                    <th class="align-middle py-3" width="16%">Cliente</th>
+                    <th class="text-center align-middle py-3" width="10%">Identidad</th>
+                    <th class="align-middle py-3" width="12%">Profesional</th>
+                    <th class="align-middle py-3" width="9%">Servicio</th>
+                    <th class="text-right align-middle py-3" width="7%">Importe</th>
+                    <th class="text-right align-middle py-3" width="6%">ISV</th>
+                    <th class="text-right align-middle py-3" width="7%">Descuento</th>
+                    <th class="text-right align-middle py-3" width="7%">Neto</th>
+                    <th class="text-center align-middle py-3" width="8%">Estado</th>
+                    <th class="text-center align-middle py-3" width="9%">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+    ';
+
+    $i = $limit + 1;
+    $cache_secuencia = array();
+
+    while ($registro2 = $result->fetch_assoc()) {
+        $facturas_id = (int)$registro2['facturas_id'];
+
+        $totales = obtener_totales_factura($mysqli, $facturas_id);
+
+        $precio = $totales["precio"];
+        $descuento = $totales["descuento"];
+        $isv_neto = $totales["isv_neto"];
+        $total = $totales["total"];
+
+        $secuencia = obtener_secuencia_facturacion(
+            $mysqliOtro,
+            $registro2['secuencia_facturacion_id'],
+            $cache_secuencia
+        );
+
+        if ((int)$registro2['numero'] == 0) {
+            $numero = "Aún no se ha generado";
+        } else {
+            $numero = $secuencia['prefijo'] . rellenarDigitos($registro2['numero'], $secuencia['relleno']);
+        }
+
+        $estado_fila = (int)$registro2['estado'];
+        $estado_badge = badge_estado_factura($estado_fila);
+
+        $opciones = '';
+
+        if ($estado_fila == 1) {
+            $opciones .= '<a class="dropdown-item" href="javascript:pay(' . $facturas_id . ');void(0);">
+                            <i class="fas fa-file-invoice text-primary mr-2"></i> Generar factura
+                          </a>';
+
+            $opciones .= '<div class="dropdown-divider"></div>';
+
+            $opciones .= '<a class="dropdown-item text-danger" href="javascript:deleteBill(' . $facturas_id . ');void(0);">
+                            <i class="fas fa-trash-alt mr-2"></i> Eliminar factura
+                          </a>';
+        }
+
+        if ($estado_fila == 2) {
+            $opciones .= '<a class="dropdown-item" href="javascript:printBill(' . $facturas_id . ');void(0);">
+                            <i class="fas fa-print text-secondary mr-2"></i> Imprimir factura
+                          </a>';
+
+            $opciones .= '<a class="dropdown-item" href="javascript:mailBill(' . $facturas_id . ');void(0);">
+                            <i class="far fa-paper-plane text-info mr-2"></i> Enviar factura
+                          </a>';
+        }
+
+        if ($estado_fila == 3) {
+            $opciones .= '<a class="dropdown-item" href="javascript:printBill(' . $facturas_id . ');void(0);">
+                            <i class="fas fa-print text-secondary mr-2"></i> Imprimir factura
+                          </a>';
+        }
+
+        if ($estado_fila == 4) {
+            $opciones .= '<a class="dropdown-item" href="javascript:pago(' . $facturas_id . ');void(0);">
+                            <i class="fas fa-money-check-alt text-success mr-2"></i> Pagar crédito
+                          </a>';
+
+            $opciones .= '<a class="dropdown-item" href="javascript:printBill(' . $facturas_id . ');void(0);">
+                            <i class="fas fa-print text-secondary mr-2"></i> Imprimir factura
+                          </a>';
+        }
+
+        if ($opciones == '') {
+            $opciones = '<span class="dropdown-item text-muted"><i class="fas fa-info-circle mr-2"></i> Sin acciones disponibles</span>';
+        }
+
+        $acciones = '
+            <div class="btn-group">
+                <button class="btn btn-primary dropdown-toggle shadow-sm" 
+                        type="button" 
+                        id="dropdownFactura' . $facturas_id . '" 
+                        data-toggle="dropdown" 
+                        aria-haspopup="true" 
+                        aria-expanded="false"
+                        style="border-radius:6px; padding:7px 14px; font-size:13px;">
+                    <i class="fas fa-cog mr-1"></i> Acciones
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-right shadow border-0" 
+                     aria-labelledby="dropdownFactura' . $facturas_id . '" 
+                     style="border-radius:8px;">
+                    ' . $opciones . '
+                </div>
+            </div>
+        ';
+
+        $tabla .= '
+            <tr style="height:56px;">
+                <td class="text-center align-middle font-weight-bold py-3">' . $i . '</td>
+
+                <td class="text-center align-middle py-3">
+                    <span class="badge badge-light border px-3 py-2" style="font-size:13px; border-radius:8px;">
+                        <i class="fas fa-calendar-alt text-primary mr-1"></i> ' . h($registro2['fecha']) . '
+                    </span>
+                </td>
+
+                <td class="text-center align-middle py-3">
+                    ' . badge_factura($numero) . '
+                </td>
+
+                <td class="align-middle py-3">
+                    <div style="line-height:1.35;">
+                        <div class="font-weight-bold text-dark">
+                            <i class="fas fa-user text-info mr-1"></i> ' . h($registro2['paciente']) . '
+                        </div>
+                    </div>
+                </td>
+
+                <td class="text-center align-middle py-3">
+                    <span class="badge badge-light border px-3 py-2" style="font-size:13px; border-radius:8px;">
+                        <i class="fas fa-id-card text-muted mr-1"></i> ' . h($registro2['identidad']) . '
+                    </span>
+                </td>
+
+                <td class="align-middle py-3">
+                    <span class="font-weight-bold text-dark">
+                        <i class="fas fa-user-md text-primary mr-1"></i> ' . h($registro2['profesional']) . '
+                    </span>
+                </td>
+
+                <td class="align-middle py-3">
+                    <span class="text-dark">' . h($registro2['consultorio']) . '</span>
+                </td>
+
+                <td class="text-right align-middle py-3">
+                    <span class="font-weight-bold text-dark">L ' . number_format($precio, 2) . '</span>
+                </td>
+
+                <td class="text-right align-middle py-3">
+                    <span class="font-weight-bold text-info">L ' . number_format($isv_neto, 2) . '</span>
+                </td>
+
+                <td class="text-right align-middle py-3">
+                    <span class="font-weight-bold text-danger">L ' . number_format($descuento, 2) . '</span>
+                </td>
+
+                <td class="text-right align-middle py-3">
+                    <span class="badge px-3 py-2" style="font-size:13px; border-radius:8px; color:#0b7a32; background:#ecfff4; border:1px solid #86d99b;">
+                        L ' . number_format($total, 2) . '
+                    </span>
+                </td>
+
+                <td class="text-center align-middle py-3">
+                    ' . $estado_badge . '
+                </td>
+
+                <td class="text-center align-middle py-3">
+                    ' . $acciones . '
+                </td>
+            </tr>
+        ';
+
+        $i++;
+    }
+
+    $stmt_registro->close();
+
+    if ($nroProductos == 0) {
+        $tabla .= '
+            <tr>
+                <td colspan="13" class="text-center py-5">
+                    <div class="text-danger font-weight-bold" style="font-size:15px;">
+                        <i class="fas fa-search mr-2"></i> No se encontraron resultados
+                    </div>
+                    <div class="text-muted mt-1">
+                        Intente buscar por paciente, identidad o número de factura.
+                    </div>
+                </td>
+            </tr>
+        ';
+    } else {
+        $tabla .= '
+            <tr>
+                <td colspan="13" class="text-center py-4">
+                    <span class="badge badge-light border px-4 py-2" style="font-size:14px; border-radius:20px;">
+                        <i class="fas fa-file-invoice text-info mr-1"></i>
+                        Total de registros encontrados:
+                        <strong>' . number_format($nroProductos) . '</strong>
+                    </span>
+                </td>
+            </tr>
+        ';
+    }
+
+    $tabla .= '
+            </tbody>
+        </table>
+    </div>';
+
+    $array = array(
+        0 => $tabla,
+        1 => $lista
+    );
+
+    echo json_encode($array);
+
+    $mysqli->close();
+    $mysqliOtro->close();
+
+} catch (Exception $e) {
+    $tabla = '
+    <div class="alert alert-danger mb-0">
+        <i class="fas fa-exclamation-triangle mr-1"></i>
+        Error: ' . h($e->getMessage()) . '
+    </div>';
+
+    echo json_encode(array(
+        0 => $tabla,
+        1 => ''
+    ));
+}

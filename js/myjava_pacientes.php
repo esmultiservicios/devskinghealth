@@ -1309,7 +1309,7 @@ $('#formulario_pacientes #grupo_editar_rtn').on('click', function(e) {
         '#formulario_pacientes #expediente').val());
 });
 
-var listar_pacientes = function(){
+var listar_pacientes = function () {
     var estado = "";
     var paciente = "";
     var dato = $('#form_main #bs_regis').val();
@@ -1326,123 +1326,285 @@ var listar_pacientes = function(){
         paciente = $('#form_main #tipo').val();
     }
 
-	var table_pacientes = $("#dataTablePacientesMain").DataTable({
-		"destroy":true,	
-		"ajax":{
-			"method":"POST",
-			"url": "<?php echo SERVERURL; ?>php/pacientes/llenarDataTablePacientes.php",
-            "data": function(d) {
+    var limpiarTexto = function (texto) {
+        if (texto === null || texto === undefined || texto === '') {
+            return '';
+        }
+
+        return String(texto)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    };
+
+    var mostrarSinDato = function (texto, icono) {
+        if (texto === null || texto === undefined || texto === '') {
+            return '<span class="badge badge-light px-3 py-2" style="border-radius: 20px; color: #777; background-color: #f1f1f1;">Sin dato</span>';
+        }
+
+        return '' +
+            '<span class="badge badge-light border px-3 py-2" style="font-size: 12px; border-radius: 8px;">' +
+                '<i class="' + icono + ' mr-1"></i>' + limpiarTexto(texto) +
+            '</span>';
+    };
+
+    var table_pacientes = $("#dataTablePacientesMain").DataTable({
+        "destroy": true,
+        "ajax": {
+            "method": "POST",
+            "url": "<?php echo SERVERURL; ?>php/pacientes/llenarDataTablePacientes.php",
+            "data": function (d) {
                 d.paciente = paciente;
-				d.estado = estado;
-            }		
-		},		
-		"columns":[
-			{"data": "expediente"},
-			{"data": "identidad"},
-			{"data": "paciente"},			
-			{"data": "genero"},
-			{"data": "telefono1"},
-			{"data": "telefono2"},			
-            {"data": "email"},
-            {"data": "localidad"},
-            {"data": "estado"},
-			{
-				"data": null,
-				"defaultContent": 
-					'<div class="btn-group">' +
-						'<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
-							'<i class="fas fa-cog"></i>' +
-						'</button>' +
-						'<div class="dropdown-menu">' +
-							'<a class="dropdown-item editarPacientes" href="#"><i class="fas fa-user-edit fa-lg"></i> Editar</a>' +
-                            '<a class="dropdown-item eliminarPacientes" href="#"><i class="fas fa-trash fa-lg"></i> Eliminar</a>' +
-						'</div>' +
-					'</div>'
-			}
-		],		
+                d.estado = estado;
+                d.dato = dato;
+            }
+        },
+        "columns": [
+            {
+                "data": "expediente",
+                "render": function (data, type, row) {
+                    if (type !== 'display') {
+                        return data;
+                    }
+
+                    return '' +
+                        '<span class="badge badge-light border px-3 py-2" style="font-size: 12px; border-radius: 8px; border-color: #b8dfff !important; color: #007bba; background-color: #f5fbff;">' +
+                            '<i class="fas fa-id-card mr-1"></i>' + limpiarTexto(data) +
+                        '</span>';
+                }
+            },
+            {
+                "data": "identidad",
+                "render": function (data, type, row) {
+                    if (type !== 'display') {
+                        return data;
+                    }
+
+                    return mostrarSinDato(data, 'fas fa-address-card text-secondary');
+                }
+            },
+            {
+                "data": "paciente",
+                "render": function (data, type, row) {
+                    if (type !== 'display') {
+                        return data;
+                    }
+
+                    var codigo = row.pacientes_id ? row.pacientes_id : '';
+
+                    return '' +
+                        '<div style="line-height: 1.25;">' +
+                            '<div class="font-weight-bold text-dark">' +
+                                '<i class="fas fa-user text-info mr-1"></i>' + limpiarTexto(data) +
+                            '</div>' +
+                            '<small class="text-muted">Código: ' + limpiarTexto(codigo) + '</small>' +
+                        '</div>';
+                }
+            },
+            {
+                "data": "genero",
+                "render": function (data, type, row) {
+                    if (type !== 'display') {
+                        return data;
+                    }
+
+                    if (data === 'Hombre') {
+                        return '<span class="badge badge-light border px-3 py-2" style="border-radius: 20px;"><i class="fas fa-mars text-primary mr-1"></i> Hombre</span>';
+                    }
+
+                    if (data === 'Mujer') {
+                        return '<span class="badge badge-light border px-3 py-2" style="border-radius: 20px;"><i class="fas fa-venus text-danger mr-1"></i> Mujer</span>';
+                    }
+
+                    return '<span class="badge badge-light px-3 py-2" style="border-radius: 20px; color: #777; background-color: #f1f1f1;">Sin dato</span>';
+                }
+            },
+            {
+                "data": "telefono1",
+                "render": function (data, type, row) {
+                    if (type !== 'display') {
+                        return data;
+                    }
+
+                    if (data === null || data === undefined || data === '') {
+                        return '<span class="badge badge-light px-3 py-2" style="border-radius: 20px; color: #777; background-color: #f1f1f1;">Sin dato</span>';
+                    }
+
+                    return '' +
+                        '<span class="badge px-3 py-2" style="font-size: 12px; border-radius: 20px; color: #088143; background-color: #ecfff4; border: 1px solid #b9ebcc;">' +
+                            '<i class="fas fa-phone mr-1"></i>' + limpiarTexto(data) +
+                        '</span>';
+                }
+            },
+            {
+                "data": "telefono2",
+                "render": function (data, type, row) {
+                    if (type !== 'display') {
+                        return data;
+                    }
+
+                    if (data === null || data === undefined || data === '') {
+                        return '<span class="badge badge-light px-3 py-2" style="border-radius: 20px; color: #777; background-color: #f1f1f1;">Sin dato</span>';
+                    }
+
+                    return '' +
+                        '<span class="badge px-3 py-2" style="font-size: 12px; border-radius: 20px; color: #088143; background-color: #ecfff4; border: 1px solid #b9ebcc;">' +
+                            '<i class="fas fa-phone-alt mr-1"></i>' + limpiarTexto(data) +
+                        '</span>';
+                }
+            },
+            {
+                "data": "email",
+                "render": function (data, type, row) {
+                    if (type !== 'display') {
+                        return data;
+                    }
+
+                    if (data === null || data === undefined || data === '') {
+                        return '<span class="badge badge-light px-3 py-2" style="border-radius: 20px; color: #777; background-color: #f1f1f1;">Sin correo</span>';
+                    }
+
+                    return '' +
+                        '<span class="text-dark">' +
+                            '<i class="fas fa-envelope text-primary mr-1"></i>' + limpiarTexto(data) +
+                        '</span>';
+                }
+            },
+            {
+                "data": "localidad",
+                "render": function (data, type, row) {
+                    if (type !== 'display') {
+                        return data;
+                    }
+
+                    if (data === null || data === undefined || data === '') {
+                        return '<span class="badge badge-light px-3 py-2" style="border-radius: 20px; color: #777; background-color: #f1f1f1;">Sin dirección</span>';
+                    }
+
+                    return '' +
+                        '<span class="text-dark">' +
+                            '<i class="fas fa-map-marker-alt text-danger mr-1"></i>' + limpiarTexto(data) +
+                        '</span>';
+                }
+            },
+            {
+                "data": "estado",
+                "render": function (data, type, row) {
+                    if (type !== 'display') {
+                        return data;
+                    }
+
+                    if (data === 'Activo') {
+                        return '<span class="badge badge-success px-3 py-2" style="border-radius: 20px;"><i class="fas fa-check-circle mr-1"></i> Activo</span>';
+                    }
+
+                    return '<span class="badge badge-secondary px-3 py-2" style="border-radius: 20px;"><i class="fas fa-times-circle mr-1"></i> Inactivo</span>';
+                }
+            },
+            {
+                "data": null,
+                "orderable": false,
+                "searchable": false,
+                "defaultContent":
+                    '<div class="btn-group">' +
+                        '<button type="button" class="btn btn-primary btn-sm dropdown-toggle shadow-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 6px;">' +
+                            '<i class="fas fa-cog mr-1"></i> Acciones' +
+                        '</button>' +
+                        '<div class="dropdown-menu dropdown-menu-right shadow border-0" style="border-radius: 8px;">' +
+                            '<a class="dropdown-item editarPacientes" href="#"><i class="fas fa-user-edit text-primary mr-2"></i> Editar</a>' +
+                            '<div class="dropdown-divider"></div>' +
+                            '<a class="dropdown-item eliminarPacientes text-danger" href="#"><i class="fas fa-trash-alt mr-2"></i> Eliminar</a>' +
+                        '</div>' +
+                    '</div>'
+            }
+        ],
         "lengthMenu": lengthMenu20,
-		"stateSave": true,
-		"bDestroy": true,		
-		"language": idioma_español,//esta se encuenta en el archivo main.js
-		"dom": dom,			
-		"buttons":[		
-			{
-				text:      '<i class="fas fa-sync-alt fa-lg"></i> Actualizar',
-				titleAttr: 'Actualizar Pago',
-				className: 'btn btn-info',
-				action: 	function(){
-					listar_pacientes();
-				}
-			},		
-			{
-				text:      '<i class="fas fa-user-plus fa-lg"></i> Registrar Pacientes',
-				titleAttr: 'Registrar Pacientes',
-				className: 'btn btn-primary',
-				action: 	function(){
-					modalPacientes();
-				}
-			},	  
-			{
-				text:      '<i class="fas fa-user-plus fa-lg"></i> Registrar Profesion',
-				titleAttr: 'Registrar Profesion',
-				className: 'btn btn-primary',
-				action: 	function(){
-					modalProfesion();
-				}
-			},	                      			
-			{
-				extend:    'excelHtml5',
-				text:      '<i class="fas fa-file-excel fa-lg"></i> Excel',
-				titleAttr: 'Excel',
-				footer: true,
-				title: 'Reporte Pacientes',
-				className: 'btn btn-success',
-				exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6,7,8]
-                },				
-			},
-			{
-				extend: 'pdf',
-				orientation: 'landscape',
-				text: '<i class="fas fa-file-pdf fa-lg"></i> PDF',
-				titleAttr: 'PDF',
-				footer: true,
-				title: 'Reporte Pacientes',
-				className: 'btn btn-danger',
-				exportOptions: {
-					modifier: {
-						page: 'current' // Solo exporta las filas visibles en la página actual
-					},
-					columns: [0, 1, 2, 3, 4, 5, 6,7,8] // Define las columnas a exportar
-				},
-				customize: function(doc) {
-					// Asegúrate de que `imagen` contenga la cadena base64 de la imagen
-					doc.content.splice(1, 0, {
-						margin: [0, 0, 0, 12],
-						alignment: 'left',
-						image: imagen, // Usando la variable que ya tiene la imagen base64
-						width: 100, // Ajusta el tamaño si es necesario
-						height: 45 // Ajusta el tamaño si es necesario
-					});
-				}
-			},
-			{
-				extend: 'print',
-				text: '<i class="fas fa-print fa-lg"></i> Imprimir',  // Correcta colocación del icono
-				titleAttr: 'Imprimir',
-				footer: true,
-				title: 'Reporte Pacientes',
-				className: 'btn btn-secondary',
-				exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6,7,8]
+        "stateSave": true,
+        "bDestroy": true,
+        "language": idioma_español,
+        "dom": dom,
+        "order": [[0, "asc"]],
+        "buttons": [
+            {
+                text: '<i class="fas fa-sync-alt fa-lg"></i> Actualizar',
+                titleAttr: 'Actualizar Pacientes',
+                className: 'btn btn-info',
+                action: function () {
+                    listar_pacientes();
+                }
+            },
+            {
+                text: '<i class="fas fa-user-plus fa-lg"></i> Registrar Paciente',
+                titleAttr: 'Registrar Paciente',
+                className: 'btn btn-primary',
+                action: function () {
+                    modalPacientes();
+                }
+            },
+            {
+                text: '<i class="fas fa-briefcase-medical fa-lg"></i> Registrar Profesión',
+                titleAttr: 'Registrar Profesión',
+                className: 'btn btn-primary',
+                action: function () {
+                    modalProfesion();
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fas fa-file-excel fa-lg"></i> Excel',
+                titleAttr: 'Excel',
+                footer: true,
+                title: 'Reporte Pacientes',
+                className: 'btn btn-success',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                }
+            },
+            {
+                extend: 'pdf',
+                orientation: 'landscape',
+                text: '<i class="fas fa-file-pdf fa-lg"></i> PDF',
+                titleAttr: 'PDF',
+                footer: true,
+                title: 'Reporte Pacientes',
+                className: 'btn btn-danger',
+                exportOptions: {
+                    modifier: {
+                        page: 'current'
+                    },
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
                 },
-			}
-		],
-	});	 
-	table_pacientes.search('').draw();
-	$('#buscar').focus();
-	
-	editar_pacientes_dataTable("#dataTablePacientesMain tbody", table_pacientes);
+                customize: function (doc) {
+                    doc.content.splice(1, 0, {
+                        margin: [0, 0, 0, 12],
+                        alignment: 'left',
+                        image: imagen,
+                        width: 100,
+                        height: 45
+                    });
+                }
+            },
+            {
+                extend: 'print',
+                text: '<i class="fas fa-print fa-lg"></i> Imprimir',
+                titleAttr: 'Imprimir',
+                footer: true,
+                title: 'Reporte Pacientes',
+                className: 'btn btn-secondary',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                }
+            }
+        ]
+    });
+
+    table_pacientes.search('').draw();
+
+    $('#buscar').focus();
+
+    editar_pacientes_dataTable("#dataTablePacientesMain tbody", table_pacientes);
     eliminar_pacientes_datataTable("#dataTablePacientesMain tbody", table_pacientes);
 }
 
